@@ -5,28 +5,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Map;
+import java.io.Serializable;
 
 @Data
 @Table(name = "baskets")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Basket {
+public class Basket implements Serializable {
+    @EmbeddedId
+    private IdClientAndProduct idClientAndProduct;
 
-    @Id
-    private int id_client;
-    @Id
-    private int id_product;
-
-   /* @EmbeddedId
-    private ClientProduct clientProduct;
+    private Integer amount;
 
     @Embeddable
-    @NoArgsConstructor
-    class ClientProduct {
-        private int id_client;
-        private int id_product;
-    }*/
+    private class IdClientAndProduct  implements Serializable{
+        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+        @JoinColumn
+        private Client idClient;
 
+        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+        @JoinColumn
+        private Product idProduct;
+    }
 }

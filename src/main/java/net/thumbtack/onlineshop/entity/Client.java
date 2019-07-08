@@ -12,13 +12,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Client extends User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String email;
-    private String postal_address;
-    private String phone_number;
-    private int cash;
+
+    private String postalAddress;
+
+    private String phoneNumber;
+
+    private Integer cash;
 }
