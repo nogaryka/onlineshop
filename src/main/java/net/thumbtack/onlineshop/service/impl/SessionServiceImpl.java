@@ -1,7 +1,6 @@
 package net.thumbtack.onlineshop.service.impl;
 
 import net.thumbtack.onlineshop.dto.request.LoginRequest;
-import net.thumbtack.onlineshop.dto.request.SessionCookieRequest;
 import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
 import net.thumbtack.onlineshop.dto.responce.SettingsServerResponse;
 import net.thumbtack.onlineshop.exceptions.OnlineShopException;
@@ -16,17 +15,17 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void logout(SessionCookieRequest cookie) throws OnlineShopException {
+    public void logout(String cookie) throws OnlineShopException {
 
     }
 
     @Override
-    public RegistrationUserResponse getInfoAboutMe(SessionCookieRequest cookie) throws OnlineShopException {
+    public RegistrationUserResponse getInfoAboutMe(String cookie) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public SettingsServerResponse getSettingsServer(SessionCookieRequest cookie) throws OnlineShopException {
+    public SettingsServerResponse getSettingsServer(String cookie) throws OnlineShopException {
         return null;
     }
 

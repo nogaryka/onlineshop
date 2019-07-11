@@ -12,7 +12,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class CategoryControllerTest {
     private CategoryController categoryController;
+
     private CategoryService categoryService;
+
     private CategoryRepository сategoryRepository;
 
     @Before

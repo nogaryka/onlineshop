@@ -1,7 +1,6 @@
 package net.thumbtack.onlineshop.service.impl;
 
 import net.thumbtack.onlineshop.dto.request.BuyProductRequest;
-import net.thumbtack.onlineshop.dto.request.SessionCookieRequest;
 import net.thumbtack.onlineshop.dto.responce.BuyProductResponse;
 import net.thumbtack.onlineshop.exceptions.OnlineShopException;
 import net.thumbtack.onlineshop.repository.BasketRepository;
@@ -21,27 +20,27 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public BuyProductResponse addProductToBasket(SessionCookieRequest cookie, BuyProductRequest request) throws OnlineShopException {
+    public BuyProductResponse addProductToBasket(String cookie, BuyProductRequest request) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public void deleteProductFromBasketById(SessionCookieRequest cookie, Integer id) throws OnlineShopException {
+    public void deleteProductFromBasketById(String cookie, Integer id) throws OnlineShopException {
 
     }
 
     @Override
-    public BuyProductResponse editProductAmountInBasket(SessionCookieRequest cookie, BuyProductRequest request) throws OnlineShopException {
+    public BuyProductResponse editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public List<BuyProductResponse> getBasket(SessionCookieRequest cookie) throws OnlineShopException {
+    public List<BuyProductResponse> getBasket(String cookie) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public List<BuyProductResponse> buyProductsToBasket(SessionCookieRequest cookie, List<BuyProductRequest> request) throws OnlineShopException {
+    public List<BuyProductResponse> buyProductsToBasket(String cookie, List<BuyProductRequest> request) throws OnlineShopException {
         return null;
     }
 }

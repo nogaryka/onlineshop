@@ -11,6 +11,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class SessionControllerTest {
     private SessionController sessionController;
+
     private SessionService sessionService;
 
     @Before

@@ -2,10 +2,10 @@ package net.thumbtack.onlineshop.service.impl;
 
 import net.thumbtack.onlineshop.dto.request.AdminReportRequest;
 import net.thumbtack.onlineshop.dto.request.EditAccountAdminRequest;
-import net.thumbtack.onlineshop.dto.request.RegistrationUserRequest;
-import net.thumbtack.onlineshop.dto.request.SessionCookieRequest;
+import net.thumbtack.onlineshop.dto.request.RegistrationAdminRequest;
 import net.thumbtack.onlineshop.dto.responce.AdminReportResponse;
-import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
+import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
+import net.thumbtack.onlineshop.entity.Administrator;
 import net.thumbtack.onlineshop.exceptions.OnlineShopException;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.service.AdministratorService;
@@ -22,12 +22,28 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public RegistrationUserResponse addAdmin(RegistrationUserRequest request) throws OnlineShopException {
-        return null;
+    public RegistrationAdminResponse addAdmin(RegistrationAdminRequest request) throws OnlineShopException {
+        Administrator administrator = new Administrator(request.getFirstName(),
+                request.getLastName(),
+                request.getPatronymic(),
+                request.getLogin(),
+                request.getPassword(),
+                request.getPost());
+
+        administratorRepository.save(administrator);
+
+        RegistrationAdminResponse response = new RegistrationAdminResponse(administrator.getId(),
+                administrator.getFirstName(),
+                administrator.getLastName(),
+                administrator.getPatronymic(),
+                administrator.getLogin(),
+                administrator.getPassword(),
+                administrator.getPost());
+        return response;
     }
 
     @Override
-    public RegistrationUserResponse editProfileAdmin(SessionCookieRequest cookie, EditAccountAdminRequest request) throws OnlineShopException {
+    public RegistrationAdminResponse editProfileAdmin(String cookie, EditAccountAdminRequest request) throws OnlineShopException {
         return null;
     }
 

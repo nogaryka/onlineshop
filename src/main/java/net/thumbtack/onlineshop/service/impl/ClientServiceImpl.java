@@ -4,7 +4,6 @@ import net.thumbtack.onlineshop.dto.request.BuyProductRequest;
 import net.thumbtack.onlineshop.dto.request.DepositRequest;
 import net.thumbtack.onlineshop.dto.request.EditAccountClientRequest;
 import net.thumbtack.onlineshop.dto.request.RegistrationUserRequest;
-import net.thumbtack.onlineshop.dto.request.SessionCookieRequest;
 import net.thumbtack.onlineshop.dto.responce.BuyProductResponse;
 import net.thumbtack.onlineshop.dto.responce.InformarionAdoutUserResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
@@ -29,27 +28,27 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public RegistrationUserResponse editProfileClient(SessionCookieRequest cookie, EditAccountClientRequest request) throws OnlineShopException {
+    public RegistrationUserResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public InformarionAdoutUserResponse getInfoAboutClientForAdmin(SessionCookieRequest cookie) throws OnlineShopException {
+    public InformarionAdoutUserResponse getInfoAboutClientForAdmin(String cookie) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public RegistrationUserResponse putMoney(SessionCookieRequest cookie, DepositRequest request) throws OnlineShopException {
+    public RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public RegistrationUserResponse getMoney(SessionCookieRequest cookie) throws OnlineShopException {
+    public RegistrationUserResponse getMoney(String cookie) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public BuyProductResponse buyProduct(SessionCookieRequest cookie, BuyProductRequest request) throws OnlineShopException {
+    public BuyProductResponse buyProduct(String cookie, BuyProductRequest request) throws OnlineShopException {
         return null;
     }
 }

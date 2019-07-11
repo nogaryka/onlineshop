@@ -12,7 +12,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class ProductControllerTest {
     private ProductController productController;
+
     private ProductService productService;
+
     private ProductRepository productRepository;
 
     @Before

@@ -1,7 +1,6 @@
 package net.thumbtack.onlineshop.service.impl;
 
 import net.thumbtack.onlineshop.dto.request.CategoryRequest;
-import net.thumbtack.onlineshop.dto.request.SessionCookieRequest;
 import net.thumbtack.onlineshop.dto.responce.CategoryResponse;
 import net.thumbtack.onlineshop.exceptions.OnlineShopException;
 import net.thumbtack.onlineshop.repository.CategoryRepository;
@@ -22,27 +21,27 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public CategoryResponse addCategory(SessionCookieRequest cookie, CategoryRequest request) throws OnlineShopException {
+    public CategoryResponse addCategory(String cookie, CategoryRequest request) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public CategoryResponse getCategoryById(SessionCookieRequest cookie, Integer id) throws OnlineShopException {
+    public CategoryResponse getCategoryById(String cookie, Integer id) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public CategoryResponse editCategory(SessionCookieRequest cookie, CategoryRequest request, Integer id) throws OnlineShopException {
+    public CategoryResponse editCategory(String cookie, CategoryRequest request, Integer id) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public void deleteCategoryById(SessionCookieRequest cookie, Integer id) throws OnlineShopException {
+    public void deleteCategoryById(String cookie, Integer id) throws OnlineShopException {
 
     }
 
     @Override
-    public List<CategoryResponse> getCategoryList(SessionCookieRequest cookie) throws OnlineShopException {
+    public List<CategoryResponse> getCategoryList(String cookie) throws OnlineShopException {
         return null;
     }
 }

@@ -2,7 +2,6 @@ package net.thumbtack.onlineshop.service.impl;
 
 import net.thumbtack.onlineshop.dto.request.ListProductRequest;
 import net.thumbtack.onlineshop.dto.request.ProductRequest;
-import net.thumbtack.onlineshop.dto.request.SessionCookieRequest;
 import net.thumbtack.onlineshop.dto.responce.ProductResponse;
 import net.thumbtack.onlineshop.exceptions.OnlineShopException;
 import net.thumbtack.onlineshop.repository.ProductRepository;
@@ -22,27 +21,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse addProduct(SessionCookieRequest cookie, ProductRequest request) throws OnlineShopException {
+    public ProductResponse addProduct(String cookie, ProductRequest request) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public ProductResponse editProduct(SessionCookieRequest cookie, ProductRequest request, Integer id) throws OnlineShopException {
+    public ProductResponse editProduct(String cookie, ProductRequest request, Integer id) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public void deleteProduct(SessionCookieRequest cookie, Integer id) throws OnlineShopException {
+    public void deleteProduct(String cookie, Integer id) throws OnlineShopException {
 
     }
 
     @Override
-    public ProductResponse getProductById(SessionCookieRequest cookie, Integer id) throws OnlineShopException {
+    public ProductResponse getProductById(String cookie, Integer id) throws OnlineShopException {
         return null;
     }
 
     @Override
-    public List<ProductResponse> getAllProducts(SessionCookieRequest cookie, ListProductRequest request) throws OnlineShopException {
+    public List<ProductResponse> getAllProducts(String cookie, ListProductRequest request) throws OnlineShopException {
         return null;
     }
 }

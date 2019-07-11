@@ -12,7 +12,9 @@ import static org.junit.Assert.assertNotNull;
 
 public class BasketControllerTest {
     private BasketController basketController;
+
     private BasketService basketService;
+
     private BasketRepository basketRepository;
 
     @Before
