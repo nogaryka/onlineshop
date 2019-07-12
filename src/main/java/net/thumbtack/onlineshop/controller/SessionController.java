@@ -1,5 +1,8 @@
 package net.thumbtack.onlineshop.controller;
 
+import net.thumbtack.onlineshop.OnlineShopServer;
+import net.thumbtack.onlineshop.dto.request.LoginRequest;
+import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
 import net.thumbtack.onlineshop.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/sessions")
@@ -23,9 +29,12 @@ public class SessionController {
         this.service = service;
     }
 
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> login(@RequestBody String name, HttpServletRequest response) {
-        return ResponseEntity.ok("");
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+        RegistrationUserResponse registrationUserResponse = service.login(request);
+        response.addCookie(new Cookie(OnlineShopServer.COOKIE, registrationUserResponse.getId().toString()));
+        return ResponseEntity.ok().body(registrationUserResponse);
     }
 
     @DeleteMapping(produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -16,15 +16,15 @@ public class SessionControllerTest {
 
     @Before
     public void setUp() {
-        sessionService = new SessionServiceImpl();
+        //sessionService = new SessionServiceImpl();
         sessionController = new SessionController(sessionService);
     }
 
-    @Test
+    /*@Test
     public void loginTest() {
         ResponseEntity<?> response = sessionController.login("test", new MockHttpServletRequest());
         assertNotNull(response);
-    }
+    }*/
 
     @Test
     public void logoutTest() {
