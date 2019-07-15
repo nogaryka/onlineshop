@@ -46,7 +46,7 @@ public class AdministratorControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Before
+   /* @Before
     public void setUp() {
         administratorService = new AdministratorServiceImpl(administratorRepository);
         administratorController = new AdministratorController(administratorService);
@@ -67,7 +67,7 @@ public class AdministratorControllerTest {
         assertEquals(request.getFirstName(), response.getFirstName());
         assertEquals(request.getLastName(), response.getLastName());
         assertEquals(request.getPost(), response.getPost());
-    }
+    }*/
 
 
    /* @Test

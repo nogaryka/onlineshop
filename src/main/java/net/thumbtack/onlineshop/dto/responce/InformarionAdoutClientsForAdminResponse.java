@@ -1,16 +1,13 @@
 package net.thumbtack.onlineshop.dto.responce;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationUserResponse {
+public class InformarionAdoutClientsForAdminResponse {
     private Integer id;
 
     private String firstName;
@@ -19,10 +16,11 @@ public class RegistrationUserResponse {
 
     private String patronymic;
 
-    private String login;
+    private String email;
 
-    private String password;
+    private String postalAddress;
 
-    @JsonIgnore
-    private String token;
+    private String phoneNumber;
+
+    private final String userType = "client";
 }

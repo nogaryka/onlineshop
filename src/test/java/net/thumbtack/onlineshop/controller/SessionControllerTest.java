@@ -26,17 +26,17 @@ public class SessionControllerTest {
         assertNotNull(response);
     }*/
 
-    @Test
+    /*@Test
     public void logoutTest() {
         ResponseEntity<?> response = sessionController.logout("test", new MockHttpServletRequest());
         assertNotNull(response);
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void getInfoAboutMeTest() {
         ResponseEntity<?> response = sessionController.getInfoAboutMe("test", new MockHttpServletRequest());
         assertNotNull(response);
-    }
+    }*/
 
     @Test
     public void getSettingsServerTest() {

@@ -3,18 +3,21 @@ package net.thumbtack.onlineshop.service;
 import net.thumbtack.onlineshop.dto.request.BuyProductRequest;
 import net.thumbtack.onlineshop.dto.request.DepositRequest;
 import net.thumbtack.onlineshop.dto.request.EditAccountClientRequest;
-import net.thumbtack.onlineshop.dto.request.RegistrationUserRequest;
+import net.thumbtack.onlineshop.dto.request.RegistrationClientRequest;
 import net.thumbtack.onlineshop.dto.responce.BuyProductResponse;
-import net.thumbtack.onlineshop.dto.responce.InformarionAdoutUserResponse;
+import net.thumbtack.onlineshop.dto.responce.InformarionAdoutClientsForAdminResponse;
+import net.thumbtack.onlineshop.dto.responce.RegistrationClientResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
 import net.thumbtack.onlineshop.exceptions.OnlineShopException;
 
+import java.util.List;
+
 public interface ClientService {
-    RegistrationUserResponse addClient(RegistrationUserRequest request) throws OnlineShopException;
+    RegistrationClientResponse addClient(RegistrationClientRequest request) throws OnlineShopException;
 
-    RegistrationUserResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopException;
+    RegistrationClientResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopException;
 
-    InformarionAdoutUserResponse getInfoAboutClientForAdmin(String cookie) throws OnlineShopException;
+    List<InformarionAdoutClientsForAdminResponse> getInfoAboutClientsForAdmin(String cookie) throws OnlineShopException;
 
     RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopException;
 

@@ -27,4 +27,12 @@ public class Client extends User {
     private String phoneNumber;
 
     private Integer cash;
+
+    public Client(String firstName, String lastName, String patronymic, String login, String password, String email,
+                  String phoneNumber, String postalAddress) {
+        super(firstName, lastName, patronymic, login, password);
+        this.email = email;
+        this.postalAddress = postalAddress;
+        this.phoneNumber = phoneNumber;
+    }
 }

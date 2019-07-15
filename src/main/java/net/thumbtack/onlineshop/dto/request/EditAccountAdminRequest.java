@@ -1,39 +1,43 @@
 package net.thumbtack.onlineshop.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.thumbtack.onlineshop.validator.annotation.MaxNameLength;
+import net.thumbtack.onlineshop.validator.annotation.MinPasswordLength;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EditAccountAdminRequest {
     @NotBlank
+    @MaxNameLength
     @Pattern(regexp = "[A-Za-z]+")
-    @Size(min = 2, max = 20)
     private String firstName;
 
     @NotBlank
+    @MaxNameLength
     @Pattern(regexp = "[A-Za-z]+")
-    @Size(min = 2, max = 30)
     private String lastName;
 
+    @MaxNameLength
     @Pattern(regexp = "[A-Za-z]+")
-    @Size(max = 30)
     private String patronymic;
 
-    @NotBlank
+    @MinPasswordLength
     @Pattern(regexp = "[A-Za-z0-9]+")
-    @Size(min = 6, max = 20)
     private String password;
 
-    @NotBlank
+    @MinPasswordLength
     @Pattern(regexp = "[A-Za-z0-9]+")
-    @Size(min = 6, max = 20)
     private String newPassword;
 
     @NotBlank
     @Pattern(regexp = "[A-Za-z]+")
-    @Size(min = 2, max = 15)
     private String post;
-
 }

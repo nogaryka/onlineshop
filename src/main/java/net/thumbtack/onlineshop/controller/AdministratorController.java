@@ -4,6 +4,7 @@ import net.thumbtack.onlineshop.dto.request.EditAccountAdminRequest;
 import net.thumbtack.onlineshop.dto.request.RegistrationAdminRequest;
 import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.service.AdministratorService;
+import net.thumbtack.onlineshop.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import java.util.UUID;
+
 import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
 
 
@@ -27,10 +30,12 @@ import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
 @RequestMapping("/api/admins")
 public class AdministratorController {
     private final AdministratorService adminService;
+    private final SessionService service;
 
     @Autowired
-    public AdministratorController(AdministratorService adminService) {
+    public AdministratorController(AdministratorService adminService, SessionService service) {
         this.adminService = adminService;
+        this.service = service;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -38,13 +43,15 @@ public class AdministratorController {
     public ResponseEntity<?> addAdmin(@Valid @RequestBody RegistrationAdminRequest request,
                                       HttpServletResponse response) {
         RegistrationAdminResponse registerResponse = adminService.addAdmin(request);
-        response.addCookie(new Cookie(COOKIE,  registerResponse.getId().toString()));
+        Cookie cookie = new Cookie(COOKIE,  registerResponse.getToken());
+        response.addCookie(cookie);
         return ResponseEntity.ok().body(registerResponse);
     }
 
-    @PutMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editProfileAdmin(@CookieValue(COOKIE) String cookie,
-                                              @RequestBody EditAccountAdminRequest request) {
+                                              @Valid @RequestBody EditAccountAdminRequest request) {
         RegistrationAdminResponse registerResponse = adminService.editProfileAdmin(cookie, request);
         return ResponseEntity.ok().body(registerResponse);
     }
