@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -29,11 +30,20 @@ public class Product implements Serializable {
 
     private String name;
 
-    private Integer cost;
+    private Integer price;
+
+    private Integer count;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "products_categories",
-            joinColumns = @JoinColumn(name = "idProduct"),
-            inverseJoinColumns = @JoinColumn(name = "idCategory"))
-    private Set<Category> categories;
+            joinColumns = @JoinColumn(name = "id_product"),
+            inverseJoinColumns = @JoinColumn(name = "id_category"))
+    private List<Category> categories;
+
+    public Product(String name, Integer price, Integer count, List<Category> categories) {
+        this.name = name;
+        this.price = price;
+        this.count = count;
+        this.categories = categories;
+    }
 }
