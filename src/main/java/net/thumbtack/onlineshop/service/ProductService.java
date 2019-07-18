@@ -17,7 +17,7 @@ public interface ProductService {
 
     void deleteProduct(String cookie, Integer id) throws OnlineShopException;
 
-    ProductResponse getProductById(String cookie, Integer id) throws OnlineShopException;
+    AddProductResponse getProductById(String cookie, Integer id) throws OnlineShopException;
 
-    List<ProductResponse> getAllProducts(String cookie, ListProductRequest request) throws OnlineShopException;
+    List<AddProductResponse> getAllProducts(String cookie, Integer[] category, String paramOrder) throws OnlineShopException;
 }

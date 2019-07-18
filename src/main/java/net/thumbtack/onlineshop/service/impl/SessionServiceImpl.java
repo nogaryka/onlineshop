@@ -82,4 +82,8 @@ public class SessionServiceImpl implements SessionService {
     public boolean isClient(String login){
         return clientRepository.existsByLogin(login);
     }
+
+    public String getLogin(String token) {
+        return sessionRepository.findByToken(token).get().getLogin();
+    }
 }
