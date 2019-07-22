@@ -9,7 +9,7 @@ import net.thumbtack.onlineshop.dto.responce.SettingsServerResponse;
 import net.thumbtack.onlineshop.entity.Administrator;
 import net.thumbtack.onlineshop.entity.Client;
 import net.thumbtack.onlineshop.entity.Session;
-import net.thumbtack.onlineshop.exceptions.OnlineShopException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.repository.ClientRepository;
 import net.thumbtack.onlineshop.repository.SessionRepository;
@@ -37,7 +37,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public RegistrationUserResponse login(LoginRequest request) throws OnlineShopException {
+    public RegistrationUserResponse login(LoginRequest request) throws OnlineShopExceptionOld {
         Optional<Administrator> administratorOptional = administratorRepository.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if (!administratorOptional.isPresent()) {
             Optional<Client> clientOptional = clientRepository.findByLoginAndPassword(request.getLogin(), request.getPassword());
@@ -56,17 +56,17 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void logout(String token) throws OnlineShopException {
+    public void logout(String token) throws OnlineShopExceptionOld {
         sessionRepository.deleteByToken(token);
     }
 
     @Override
-    public SettingsServerResponse getSettingsServer(String cookie) throws OnlineShopException {
+    public SettingsServerResponse getSettingsServer(String cookie) throws OnlineShopExceptionOld {
         return null;
     }
 
     @Override
-    public void clearDB() throws OnlineShopException {
+    public void clearDB() throws OnlineShopExceptionOld {
 
     }
 

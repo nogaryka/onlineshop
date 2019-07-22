@@ -28,4 +28,5 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
                    @Param("patronymic") String patronymic, @Param("password") String password,
                    @Param("email") String email, @Param("postalAddress") String postalAddress,
                    @Param("phoneNumber") String phoneNumber);
+
 }

@@ -6,7 +6,7 @@ import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
 import net.thumbtack.onlineshop.entity.Administrator;
 import net.thumbtack.onlineshop.entity.Client;
 import net.thumbtack.onlineshop.entity.Session;
-import net.thumbtack.onlineshop.exceptions.OnlineShopException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.repository.ClientRepository;
 import net.thumbtack.onlineshop.repository.SessionRepository;
@@ -29,7 +29,7 @@ public class AccaountServiceImpl implements AccaountService {
     }
 
     @Override
-    public RegistrationUserResponse getInfoAboutMe(String cookie) throws OnlineShopException {
+    public RegistrationUserResponse getInfoAboutMe(String cookie) throws OnlineShopExceptionOld {
        Session session = sessionRepository.findByToken(cookie).get();
        SessionServiceImpl sessionService = new SessionServiceImpl(administratorRepository, clientRepository,
                sessionRepository);

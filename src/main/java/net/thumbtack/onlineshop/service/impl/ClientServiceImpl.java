@@ -14,7 +14,7 @@ import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
 import net.thumbtack.onlineshop.entity.Administrator;
 import net.thumbtack.onlineshop.entity.Client;
 import net.thumbtack.onlineshop.entity.Session;
-import net.thumbtack.onlineshop.exceptions.OnlineShopException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.repository.ClientRepository;
 import net.thumbtack.onlineshop.repository.SessionRepository;
@@ -40,14 +40,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public RegistrationClientResponse addClient(RegistrationClientRequest request) throws OnlineShopException {
+    public RegistrationClientResponse addClient(RegistrationClientRequest request) throws OnlineShopExceptionOld {
         Client client = new Client(request.getFirstName(), request.getLastName(), request.getPatronymic(),
                 request.getLogin(), request.getPassword(), request.getEmail(), request.getPhoneNumber(),
                 request.getPostalAddress());
 
 
         if(administratorRepository.existsByLogin(client.getLogin())) {
-            throw new OnlineShopException();
+            throw new OnlineShopExceptionOld();
         }
         clientRepository.save(client);
         RegistrationClientResponse response = (RegistrationClientResponse) new SessionServiceImpl(administratorRepository,
@@ -57,7 +57,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public RegistrationClientResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopException {
+    public RegistrationClientResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopExceptionOld {
         Client client = clientRepository.findByLogin(sessionRepository.findByToken(cookie).get().getLogin()).get();
         clientRepository.editClient(client.getId(), request.getFirstName(), request.getLastName(),
                 request.getPatronymic(), request.getNewPassword(), request.getEmail(), request.getPostalAddress(),
@@ -68,7 +68,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<InformarionAdoutClientsForAdminResponse> getInfoAboutClientsForAdmin(String cookie) throws OnlineShopException {
+    public List<InformarionAdoutClientsForAdminResponse> getInfoAboutClientsForAdmin(String cookie) throws OnlineShopExceptionOld {
         if(administratorRepository.existsByLogin(sessionRepository.findByToken(cookie).get().getLogin())) {
             List<InformarionAdoutClientsForAdminResponse> clients = new ArrayList<>();
             Iterable<Client> list = clientRepository.findAll();
@@ -79,22 +79,22 @@ public class ClientServiceImpl implements ClientService {
             }
             return clients;
         } else {
-            throw new OnlineShopException();
+            throw new OnlineShopExceptionOld();
         }
     }
 
     @Override
-    public RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopException {
+    public RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopExceptionOld {
         return null;
     }
 
     @Override
-    public RegistrationUserResponse getMoney(String cookie) throws OnlineShopException {
+    public RegistrationUserResponse getMoney(String cookie) throws OnlineShopExceptionOld {
         return null;
     }
 
     @Override
-    public BuyProductResponse buyProduct(String cookie, BuyProductRequest request) throws OnlineShopException {
+    public BuyProductResponse buyProduct(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld {
         return null;
     }
 }

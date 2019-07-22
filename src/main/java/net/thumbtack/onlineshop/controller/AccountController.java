@@ -22,8 +22,7 @@ public class AccountController {
         this.accaountService = accaountService;
     }
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getInfoAboutMe(@CookieValue(COOKIE) String cookie) {
         RegistrationUserResponse response = accaountService.getInfoAboutMe(cookie);
         return ResponseEntity.ok().body(response);

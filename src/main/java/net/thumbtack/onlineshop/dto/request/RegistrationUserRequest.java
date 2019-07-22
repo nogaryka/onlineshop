@@ -5,37 +5,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.thumbtack.onlineshop.validator.annotation.MaxNameLength;
 import net.thumbtack.onlineshop.validator.annotation.MinPasswordLength;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.Properties;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class RegistrationUserRequest {
+    @Pattern(regexp = "[А-Яа-яA-Za-z_\\-]+")
     @NotBlank
-    @Pattern(regexp = "[A-Za-z]+")
     @MaxNameLength
     private String firstName;
 
+    @Pattern(regexp = "[А-Яа-яA-Za-z_\\-]+")
     @NotBlank
-    @Pattern(regexp = "[A-Za-z]+")
     @MaxNameLength
     private String lastName;
 
-    @Pattern(regexp = "[A-Za-z]+")
+    @Pattern(regexp = "[А-Яа-яA-Za-z_\\-]+")
     @MaxNameLength
     private String patronymic;
 
-    @NotBlank
     @Pattern(regexp = "[А-Яа-яA-Za-z0-9]+")
+    @NotBlank
     @MaxNameLength
     private String login;
 
-    @NotBlank
+    @MaxNameLength
     @MinPasswordLength
     private String password;
 }

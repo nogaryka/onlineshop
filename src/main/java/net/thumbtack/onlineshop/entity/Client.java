@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,13 +21,16 @@ public class Client extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String postalAddress;
 
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    private Integer cash;
+    private Integer cash = 0;
 
     public Client(String firstName, String lastName, String patronymic, String login, String password, String email,
                   String phoneNumber, String postalAddress) {

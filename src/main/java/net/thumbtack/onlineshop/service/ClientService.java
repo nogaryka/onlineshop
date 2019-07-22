@@ -8,20 +8,20 @@ import net.thumbtack.onlineshop.dto.responce.BuyProductResponse;
 import net.thumbtack.onlineshop.dto.responce.InformarionAdoutClientsForAdminResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationClientResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
-import net.thumbtack.onlineshop.exceptions.OnlineShopException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 
 import java.util.List;
 
 public interface ClientService {
-    RegistrationClientResponse addClient(RegistrationClientRequest request) throws OnlineShopException;
+    RegistrationClientResponse addClient(RegistrationClientRequest request) throws OnlineShopExceptionOld;
 
-    RegistrationClientResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopException;
+    RegistrationClientResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopExceptionOld;
 
-    List<InformarionAdoutClientsForAdminResponse> getInfoAboutClientsForAdmin(String cookie) throws OnlineShopException;
+    List<InformarionAdoutClientsForAdminResponse> getInfoAboutClientsForAdmin(String cookie) throws OnlineShopExceptionOld;
 
-    RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopException;
+    RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopExceptionOld;
 
-    RegistrationUserResponse getMoney(String cookie) throws OnlineShopException;
+    RegistrationUserResponse getMoney(String cookie) throws OnlineShopExceptionOld;
 
-    BuyProductResponse buyProduct(String cookie, BuyProductRequest request) throws OnlineShopException;
+    BuyProductResponse buyProduct(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld;
 }

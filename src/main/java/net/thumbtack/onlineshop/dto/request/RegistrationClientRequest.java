@@ -12,13 +12,14 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistrationClientRequest extends RegistrationUserRequest {
-    @NotBlank
     @Email
+    @NotBlank
     private String email;
 
     @NotBlank
     private String postalAddress;
 
     @Pattern(regexp = "[+]?[8 7][-]?\\d{3}[-]?\\d{3}[-]?\\d{2}[-]?\\d{2}")
+    @NotBlank
     private String phoneNumber;
 }

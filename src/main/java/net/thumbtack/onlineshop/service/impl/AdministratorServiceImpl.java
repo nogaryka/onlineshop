@@ -10,7 +10,7 @@ import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.entity.Administrator;
 import net.thumbtack.onlineshop.entity.Client;
 import net.thumbtack.onlineshop.entity.Session;
-import net.thumbtack.onlineshop.exceptions.OnlineShopException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.repository.ClientRepository;
 import net.thumbtack.onlineshop.repository.SessionRepository;
@@ -33,7 +33,7 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public RegistrationAdminResponse addAdmin(RegistrationAdminRequest request) throws OnlineShopException {
+    public RegistrationAdminResponse addAdmin(RegistrationAdminRequest request) throws OnlineShopExceptionOld {
         Administrator administrator = new Administrator(request.getFirstName(),
                 request.getLastName(),
                 request.getPatronymic(),
@@ -42,7 +42,7 @@ public class AdministratorServiceImpl implements AdministratorService {
                 request.getPost());
 
         if(clientRepository.existsByLogin(administrator.getLogin())) {
-            throw new OnlineShopException();
+            throw new OnlineShopExceptionOld();
         }
         administratorRepository.save(administrator);
         RegistrationAdminResponse response = (RegistrationAdminResponse) new SessionServiceImpl(administratorRepository,
@@ -52,7 +52,7 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public RegistrationAdminResponse editProfileAdmin(String cookie, EditAccountAdminRequest request) throws OnlineShopException {
+    public RegistrationAdminResponse editProfileAdmin(String cookie, EditAccountAdminRequest request) throws OnlineShopExceptionOld {
         Administrator administrator = administratorRepository.findByLogin(sessionRepository.findByToken(cookie).get().getLogin()).get();
         administratorRepository.editAdmin(administrator.getId(), request.getFirstName(), request.getLastName(),
                 request.getPatronymic(), request.getNewPassword(), request.getPost());
@@ -62,7 +62,7 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public AdminReportResponse statement(String cookie, AdminReportRequest request) throws OnlineShopException {
+    public AdminReportResponse statement(String cookie, AdminReportRequest request) throws OnlineShopExceptionOld {
         return null;
     }
 }

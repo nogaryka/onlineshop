@@ -1,12 +1,10 @@
 package net.thumbtack.onlineshop.service.impl;
 
-import net.thumbtack.onlineshop.OnlineShopServer;
 import net.thumbtack.onlineshop.dto.request.AddCategoryRequest;
 import net.thumbtack.onlineshop.dto.request.EditCategoryRequest;
 import net.thumbtack.onlineshop.dto.responce.AddCategoryResponse;
 import net.thumbtack.onlineshop.entity.Category;
-import net.thumbtack.onlineshop.entity.Session;
-import net.thumbtack.onlineshop.exceptions.OnlineShopException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.repository.CategoryRepository;
 import net.thumbtack.onlineshop.repository.ClientRepository;
@@ -18,11 +16,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -42,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public AddCategoryResponse addCategory(String cookie, AddCategoryRequest request) throws OnlineShopException {
+    public AddCategoryResponse addCategory(String cookie, AddCategoryRequest request) throws OnlineShopExceptionOld {
         SessionServiceImpl sessionService = getSessionService(administratorRepository, clientRepository, sessionRepository);
         if (sessionService.isAdmin(sessionService.getLogin(cookie))) {
             Category category = new Category(request.getName(), request.getIdParentCategory());
@@ -54,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public AddCategoryResponse getCategoryById(String cookie, Integer id) throws OnlineShopException {
+    public AddCategoryResponse getCategoryById(String cookie, Integer id) throws OnlineShopExceptionOld {
         SessionServiceImpl sessionService = getSessionService(administratorRepository, clientRepository, sessionRepository);
         if (sessionService.isAdmin(sessionService.getLogin(cookie))) {
             Category category = categoryRepository.findById(id).get();
@@ -66,13 +62,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public AddCategoryResponse editCategory(String cookie, EditCategoryRequest request, Integer id) throws OnlineShopException {
+    public AddCategoryResponse editCategory(String cookie, EditCategoryRequest request, Integer id) throws OnlineShopExceptionOld {
         SessionServiceImpl sessionService = getSessionService(administratorRepository, clientRepository, sessionRepository);
         if (sessionService.isAdmin(sessionService.getLogin(cookie))) {
             Category category = categoryRepository.findById(id).get();
             if ((category.getIdParentCategory() == 0 || category.getIdParentCategory() == null)
                     && (request.getIdParent() != 0 || request.getIdParent() != null)) {
-                throw new OnlineShopException();
+                throw new OnlineShopExceptionOld();
             } else {
                 if (StringUtils.isEmpty(request.getName())) {
                     categoryRepository.editIdParent(id, request.getIdParent());
@@ -90,17 +86,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategoryById(String cookie, Integer id) throws OnlineShopException {
+    public void deleteCategoryById(String cookie, Integer id) throws OnlineShopExceptionOld {
         SessionServiceImpl sessionService = getSessionService(administratorRepository, clientRepository, sessionRepository);
         if (sessionService.isAdmin(sessionService.getLogin(cookie))) {
             categoryRepository.deleteById(id);
         } else {
-            throw new OnlineShopException();
+            throw new OnlineShopExceptionOld();
         }
     }
 
     @Override
-    public List<AddCategoryResponse> getCategoryList(String cookie) throws OnlineShopException {
+    public List<AddCategoryResponse> getCategoryList(String cookie) throws OnlineShopExceptionOld {
         Map<Integer, AddCategoryResponse> response = new HashMap<>();
         SessionServiceImpl sessionService = getSessionService(administratorRepository, clientRepository, sessionRepository);
         if (sessionService.isAdmin(sessionService.getLogin(cookie))) {
@@ -112,7 +108,7 @@ public class CategoryServiceImpl implements CategoryService {
             response = setNameForSubCategories(response);
             return sortCategory(response);
         } else {
-            throw new OnlineShopException();
+            throw new OnlineShopExceptionOld();
         }
     }
 

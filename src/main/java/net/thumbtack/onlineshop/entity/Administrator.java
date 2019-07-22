@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,9 +21,11 @@ public class Administrator extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private String post;
 
-    public Administrator(String firstName, String lastName, String patronymic, String login, String password, String post) {
+    public Administrator(String firstName, String lastName, String patronymic, String login, String password,
+                         String post) {
         super(firstName, lastName, patronymic, login, password);
         this.post = post;
     }

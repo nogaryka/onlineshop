@@ -1,15 +1,17 @@
 package net.thumbtack.onlineshop.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.onlineshop.OnlineShopServer;
 import net.thumbtack.onlineshop.dto.request.RegistrationAdminRequest;
-import net.thumbtack.onlineshop.dto.request.RegistrationUserRequest;
 import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
+import net.thumbtack.onlineshop.repository.ClientRepository;
+import net.thumbtack.onlineshop.repository.SessionRepository;
 import net.thumbtack.onlineshop.service.AdministratorService;
+import net.thumbtack.onlineshop.service.SessionService;
 import net.thumbtack.onlineshop.service.impl.AdministratorServiceImpl;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,7 +40,13 @@ public class AdministratorControllerTest {
 
     private AdministratorService administratorService;
 
+    private SessionService sessionService;
+
+    private SessionRepository sessionRepository;
+
     private AdministratorRepository administratorRepository;
+
+    private ClientRepository clientRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,11 +54,11 @@ public class AdministratorControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-   /* @Before
+    @AfterClass
     public void setUp() {
-        administratorService = new AdministratorServiceImpl(administratorRepository);
-        administratorController = new AdministratorController(administratorService);
+
     }
+
 
     @Test
     public void addAdminTest() throws Exception {
@@ -66,8 +74,11 @@ public class AdministratorControllerTest {
                 RegistrationAdminResponse.class);
         assertEquals(request.getFirstName(), response.getFirstName());
         assertEquals(request.getLastName(), response.getLastName());
+        assertEquals(request.getPatronymic(), response.getPatronymic());
+        assertEquals(request.getLogin(), response.getLogin());
+        assertEquals(request.getPassword(), response.getPassword());
         assertEquals(request.getPost(), response.getPost());
-    }*/
+    }
 
 
    /* @Test

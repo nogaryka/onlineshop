@@ -2,7 +2,7 @@ package net.thumbtack.onlineshop.service.impl;
 
 import net.thumbtack.onlineshop.dto.request.BuyProductRequest;
 import net.thumbtack.onlineshop.dto.responce.BuyProductResponse;
-import net.thumbtack.onlineshop.exceptions.OnlineShopException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.BasketRepository;
 import net.thumbtack.onlineshop.service.BasketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,27 +20,27 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public BuyProductResponse addProductToBasket(String cookie, BuyProductRequest request) throws OnlineShopException {
+    public BuyProductResponse addProductToBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld {
         return null;
     }
 
     @Override
-    public void deleteProductFromBasketById(String cookie, Integer id) throws OnlineShopException {
+    public void deleteProductFromBasketById(String cookie, Integer id) throws OnlineShopExceptionOld {
 
     }
 
     @Override
-    public BuyProductResponse editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopException {
+    public BuyProductResponse editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld {
         return null;
     }
 
     @Override
-    public List<BuyProductResponse> getBasket(String cookie) throws OnlineShopException {
+    public List<BuyProductResponse> getBasket(String cookie) throws OnlineShopExceptionOld {
         return null;
     }
 
     @Override
-    public List<BuyProductResponse> buyProductsToBasket(String cookie, List<BuyProductRequest> request) throws OnlineShopException {
+    public List<BuyProductResponse> buyProductsToBasket(String cookie, List<BuyProductRequest> request) throws OnlineShopExceptionOld {
         return null;
     }
 }

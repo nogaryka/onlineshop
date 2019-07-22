@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import java.util.List;
+import java.util.Set;
 
 import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
 
@@ -53,18 +53,18 @@ public class ProductController {
     @GetMapping(value = "/api/products/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getProductById(@CookieValue(COOKIE) String cookie, Integer id) {
+    public ResponseEntity<?> getProductById(@CookieValue(COOKIE) String cookie, @PathVariable("id") Integer id) {
         AddProductResponse response = productService.getProductById(cookie, id);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(value = "/api/products/{id}",
+    @GetMapping(value = "/api/products",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllProducts(@CookieValue(COOKIE) String cookie,
-                                            @RequestParam(value = "category", required = false) Integer[] category,
+                                            @RequestParam(value = "category", required = false) Iterable<Integer> category,
                                             @RequestParam(value = "order", required = false, defaultValue = "product") String order) {
-        List<AddProductResponse> responseList = productService.getAllProducts(cookie, category, order);
+        Set<AddProductResponse> responseList = productService.getAllProducts(cookie, category, order);
         return ResponseEntity.ok("");
     }
 }

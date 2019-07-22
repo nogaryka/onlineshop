@@ -6,26 +6,23 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @Data
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @NotNull
+    @Column(nullable = false)
     private String firstName;
 
-    @NotNull
+    @Column(nullable = false)
     private String lastName;
 
     private String patronymic;
 
-    @NotNull
-    @Column(unique = true)
+    @Column(nullable = false, unique = true, updatable = false)
     private String login;
 
-    @NotNull
+    @Column(nullable = false)
     private String password;
 }

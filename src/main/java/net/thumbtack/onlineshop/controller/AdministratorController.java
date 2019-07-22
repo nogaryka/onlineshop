@@ -21,8 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import java.util.UUID;
-
 import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
 
 
