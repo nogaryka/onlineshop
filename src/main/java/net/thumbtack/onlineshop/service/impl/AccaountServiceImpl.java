@@ -43,7 +43,7 @@ public class AccaountServiceImpl implements AccaountService {
            Client client = clientRepository.findByLogin(session.getLogin()).get();
            return new RegistrationClientResponse(client.getId(), client.getFirstName(),
                    client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
-                   session.getToken(), client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress());
+                   session.getToken(), client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
        }
        return null;
     }

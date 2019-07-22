@@ -64,7 +64,7 @@ public class ClientServiceImpl implements ClientService {
                 request.getPhoneNumber());
         return new RegistrationClientResponse(client.getId(), request.getFirstName(),
                 request.getLastName(), request.getPatronymic(), client.getLogin(), request.getNewPassword(),
-                cookie, request.getEmail(),  request.getPhoneNumber(), request.getPostalAddress());
+                cookie, request.getEmail(),  request.getPhoneNumber(), request.getPostalAddress(), client.getCash());
     }
 
     @Override
@@ -81,20 +81,5 @@ public class ClientServiceImpl implements ClientService {
         } else {
             throw new OnlineShopExceptionOld();
         }
-    }
-
-    @Override
-    public RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopExceptionOld {
-        return null;
-    }
-
-    @Override
-    public RegistrationUserResponse getMoney(String cookie) throws OnlineShopExceptionOld {
-        return null;
-    }
-
-    @Override
-    public BuyProductResponse buyProduct(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld {
-        return null;
     }
 }

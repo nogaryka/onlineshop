@@ -18,10 +18,4 @@ public interface ClientService {
     RegistrationClientResponse editProfileClient(String cookie, EditAccountClientRequest request) throws OnlineShopExceptionOld;
 
     List<InformarionAdoutClientsForAdminResponse> getInfoAboutClientsForAdmin(String cookie) throws OnlineShopExceptionOld;
-
-    RegistrationUserResponse putMoney(String cookie, DepositRequest request) throws OnlineShopExceptionOld;
-
-    RegistrationUserResponse getMoney(String cookie) throws OnlineShopExceptionOld;
-
-    BuyProductResponse buyProduct(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld;
 }

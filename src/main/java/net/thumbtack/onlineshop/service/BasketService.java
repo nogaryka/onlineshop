@@ -7,7 +7,7 @@ import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import java.util.List;
 
 public interface BasketService {
-    BuyProductResponse addProductToBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld;
+    List<BuyProductResponse> addProductToBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld;
 
     void deleteProductFromBasketById(String cookie, Integer id) throws OnlineShopExceptionOld;
 

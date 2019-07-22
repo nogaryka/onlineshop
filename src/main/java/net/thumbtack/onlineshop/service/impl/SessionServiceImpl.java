@@ -45,7 +45,7 @@ public class SessionServiceImpl implements SessionService {
             Session session = addCookie(client.getLogin());
             return new RegistrationClientResponse(client.getId(), client.getFirstName(),
                     client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
-                    session.getToken(), client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress());
+                    session.getToken(), client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
         } else {
             Administrator administrator = administratorOptional.get();
             Session session = addCookie(administrator.getLogin());

@@ -25,8 +25,11 @@ public class Basket implements Serializable {
 
     private Integer amount;
 
+    @Data
     @Embeddable
-    private class IdClientAndProduct  implements Serializable{
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class IdClientAndProduct  implements Serializable{
         @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
         @JoinColumn
         private Client idClient;
