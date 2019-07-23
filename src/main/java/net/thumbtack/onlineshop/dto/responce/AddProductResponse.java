@@ -19,6 +19,6 @@ public class AddProductResponse {
 
     private Integer count;
 
-    private List<Category> categoryList;
+    private List<Integer> idCategories;
 }
 

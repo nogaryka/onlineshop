@@ -20,5 +20,5 @@ public class EditProductRequest {
 
     private Integer count;
 
-    private List<Category> categoryList;
+    private List<Integer> idCategory;
 }

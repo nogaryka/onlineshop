@@ -24,6 +24,6 @@ public class AddProductRequest {
     @Min(0)
     private Integer count;
 
-    private List<Category> categoryList;
+    private List<Integer> idCategories;
 }
 

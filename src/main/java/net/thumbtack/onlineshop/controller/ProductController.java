@@ -33,7 +33,7 @@ public class ProductController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping(value = "/api/products/{id}",
+    @PutMapping(value = "{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editProduct(@CookieValue(COOKIE) String cookie,
@@ -42,7 +42,7 @@ public class ProductController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping(value = "/api/products/{id}",
+    @DeleteMapping(value = "{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteProduct(@CookieValue(COOKIE) String cookie, Integer id) {
@@ -50,16 +50,14 @@ public class ProductController {
         return ResponseEntity.ok("");
     }
 
-    @GetMapping(value = "/api/products/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(value = "{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getProductById(@CookieValue(COOKIE) String cookie, @PathVariable("id") Integer id) {
         AddProductResponse response = productService.getProductById(cookie, id);
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(value = "/api/products",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllProducts(@CookieValue(COOKIE) String cookie,
                                             @RequestParam(value = "category", required = false) Iterable<Integer> category,

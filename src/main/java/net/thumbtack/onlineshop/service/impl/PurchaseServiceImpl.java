@@ -36,9 +36,11 @@ public class PurchaseServiceImpl implements PurchaseService {
                 throw new OnlineShopExceptionOld();
             } else if(client.getCash() < request.getCount() * request.getPrice()) {
                 throw new OnlineShopExceptionOld();
-            } else if(!request.getName().equals(product.getName()) || !request.getPrice().equals(product.getCount())) {
+            } else if(!request.getName().equals(product.getName()) || !request.getPrice().equals(product.getPrice())) {
                 throw new OnlineShopExceptionOld();
             }
+            product.setCount(product.getCount() - request.getCount());
+            productRepository.save(product);
             client.setCash(client.getCash() - request.getCount() * request.getPrice());
             clientRepository.save(client);
             return new BuyProductResponse(request.getId(), request.getName(), request.getPrice(), request.getCount());

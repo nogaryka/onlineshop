@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Basket implements Serializable {
+public class Basket {
     @EmbeddedId
     private IdClientAndProduct idClientAndProduct;
 

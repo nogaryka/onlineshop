@@ -41,7 +41,7 @@ public class BasketServiceImpl implements BasketService {
         List<BuyProductResponse> list = new ArrayList<>();
         if (productRepository.existsById(request.getId())) {
             Product product = productRepository.findById(request.getId()).get();
-            if (!request.getName().equals(product.getName()) || !request.getPrice().equals(product.getCount())) {
+            if (!request.getName().equals(product.getName()) || !request.getPrice().equals(product.getPrice())) {
                 throw new OnlineShopExceptionOld();
             }
             Basket.IdClientAndProduct idClientAndProduct = basket.new IdClientAndProduct(client, product);

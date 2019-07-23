@@ -28,7 +28,7 @@ public class DepositController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getMoney(@CookieValue(OnlineShopServer.COOKIE) String cookie) {
         RegistrationClientResponse response = depositService.getMoney(cookie);
         return ResponseEntity.ok().body(response);

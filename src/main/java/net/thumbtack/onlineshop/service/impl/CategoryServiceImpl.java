@@ -64,22 +64,28 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public AddCategoryResponse editCategory(String cookie, EditCategoryRequest request, Integer id) throws OnlineShopExceptionOld {
         SessionServiceImpl sessionService = getSessionService(administratorRepository, clientRepository, sessionRepository);
+        if(request.getIdParent() == null && request.getName() == null) {
+            throw new OnlineShopExceptionOld();
+        }
         if (sessionService.isAdmin(sessionService.getLogin(cookie))) {
             Category category = categoryRepository.findById(id).get();
-            if ((category.getIdParentCategory() == 0 || category.getIdParentCategory() == null)
-                    && (request.getIdParent() != 0 || request.getIdParent() != null)) {
+            if ((category.getIdParentCategory() == 0 || category.getIdParentCategory() == null) && (request.getIdParent() != 0)) {
                 throw new OnlineShopExceptionOld();
             } else {
                 if (StringUtils.isEmpty(request.getName())) {
-                    categoryRepository.editIdParent(id, request.getIdParent());
-                } else if (request.getIdParent() == 0 || request.getIdParent() == null) {
-                    categoryRepository.editName(id, request.getName());
+                    category.setIdParentCategory(request.getIdParent());
+                    categoryRepository.save(category);
+                } else if (request.getIdParent() == null || request.getIdParent() == 0) {
+                    category.setName(request.getName());
+                    categoryRepository.save(category);
                 } else {
-                    categoryRepository.editCategory(id, request.getName(), request.getIdParent());
+                    category.setName(request.getName());
+                    category.setIdParentCategory(request.getIdParent());
+                    categoryRepository.save(category);
                 }
-                Category category2 = categoryRepository.findById(id).get();
-                return new AddCategoryResponse(category2.getId(), category2.getName(), category2.getIdParentCategory(),
-                        getParentName(category2.getIdParentCategory()));
+                category = categoryRepository.findById(id).get();
+                return new AddCategoryResponse(category.getId(), category.getName(), category.getIdParentCategory(),
+                        getParentName(category.getIdParentCategory()));
             }
         }
         return null;
@@ -133,7 +139,7 @@ public class CategoryServiceImpl implements CategoryService {
             list.add(category.getValue());
         }
         Collections.sort(list, (AddCategoryResponse a, AddCategoryResponse b) -> {
-            if(a.getIdParentCategory() == 0 || a.getIdParentCategory() == null) {
+            if (a.getIdParentCategory() == 0 || a.getIdParentCategory() == null) {
                 return a.getName().compareTo(b.getName());
             } else {
                 return a.getNameParent().compareTo(b.getName());

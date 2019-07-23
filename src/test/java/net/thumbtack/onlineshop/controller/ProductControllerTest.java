@@ -4,9 +4,6 @@ import net.thumbtack.onlineshop.repository.ProductRepository;
 import net.thumbtack.onlineshop.service.ProductService;
 import net.thumbtack.onlineshop.service.impl.ProductServiceImpl;
 import org.junit.Before;
-import org.junit.Test;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -17,11 +14,11 @@ public class ProductControllerTest {
 
     private ProductRepository productRepository;
 
-    @Before
+    /*@Before
     public void setUp() {
-        productService = new ProductServiceImpl(productRepository);
+        productService = new ProductServiceImpl(productRepository, categoryRepository);
         productController = new ProductController(productService);
-    }
+    }*/
 
    /* @Test
     public void addProductTest() {

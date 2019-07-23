@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice
-public class OnlineShopExceptionHandler extends ResponseEntityExceptionHandler {
+public class OnlineShopExceptionHandler/* extends ResponseEntityExceptionHandler*/ {
 
 
-    @ResponseStatus(value=HttpStatus.NOT_FOUND)
+   /* @ResponseStatus(value=HttpStatus.NOT_FOUND)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<AwesomeException> thisLoginIsExsist(Exception ex) {
         return new ResponseEntity<AwesomeException>(new AwesomeException("login", "Такой логин уже занят"), HttpStatus.BAD_REQUEST);
@@ -41,5 +41,5 @@ public class OnlineShopExceptionHandler extends ResponseEntityExceptionHandler {
         private String field;
 
         private String message;
-    }
+    }*/
 }
