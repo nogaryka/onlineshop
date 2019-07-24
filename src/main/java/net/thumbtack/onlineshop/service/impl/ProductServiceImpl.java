@@ -10,6 +10,7 @@ import net.thumbtack.onlineshop.repository.CategoryRepository;
 import net.thumbtack.onlineshop.repository.ProductRepository;
 import net.thumbtack.onlineshop.service.ProductService;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.SetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +83,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Set<AddProductResponse> getAllProducts(String cookie, Iterable<Integer> category, String paramOrder) throws OnlineShopExceptionOld {
+    public Set<AddProductResponse> getAllProducts(Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld {
+        Iterable<Category> categories = categoryRepository.findAllById(category);
+        Iterable<Product> products = productRepository.findDistinctProductsByCategoriesIn(categories);
         Set<AddProductResponse> productSet = new TreeSet<>();
         switch (paramOrder) {
             case "product":

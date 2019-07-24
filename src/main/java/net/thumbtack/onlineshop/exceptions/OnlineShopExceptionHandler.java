@@ -24,7 +24,7 @@ public class OnlineShopExceptionHandler/* extends ResponseEntityExceptionHandler
    /* @ResponseStatus(value=HttpStatus.NOT_FOUND)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<AwesomeException> thisLoginIsExsist(Exception ex) {
-        return new ResponseEntity<AwesomeException>(new AwesomeException("login", "Такой логин уже занят"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<AwesmoeException>(new AwesomeException("login", "Такой логин уже занят"), HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(value=HttpStatus.NOT_FOUND)

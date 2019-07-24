@@ -35,7 +35,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public List<BuyProductResponse> addProductToBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld {
-        Basket basket = new Basket();
+        Basket basket;
         Session session = sessionRepository.findByToken(cookie).get();
         Client client = clientRepository.findByLogin(session.getLogin()).get();
         List<BuyProductResponse> list = new ArrayList<>();
@@ -44,8 +44,8 @@ public class BasketServiceImpl implements BasketService {
             if (!request.getName().equals(product.getName()) || !request.getPrice().equals(product.getPrice())) {
                 throw new OnlineShopExceptionOld();
             }
-            Basket.IdClientAndProduct idClientAndProduct = basket.new IdClientAndProduct(client, product);
-            basket = new Basket(idClientAndProduct, product.getCount());
+            Basket.IdClientAndProduct idClientAndProduct = new Basket.IdClientAndProduct(client, product);
+            basket = new Basket(idClientAndProduct, request.getCount());
             basketRepository.save(basket);
             Iterable<Basket> baskets = basketRepository.findAllByIdClient(client.getId());
             for (Basket basketFromList : baskets) {
@@ -70,7 +70,7 @@ public class BasketServiceImpl implements BasketService {
         Client client = clientRepository.findByLogin(session.getLogin()).get();
         if (productRepository.existsById(request.getId())) {
             Product product = productRepository.findById(request.getId()).get();
-            Basket basket = basketRepository.updateByIdClientAndIdProduct(client.getId(), product.getId(), product.getCount()).get();
+            basketRepository.updateByIdClientAndIdProduct(client.getId(), product.getId(), request.getCount());
         }
         return new BuyProductResponse(request.getId(), request.getName(), request.getPrice(), request.getCount());
     }

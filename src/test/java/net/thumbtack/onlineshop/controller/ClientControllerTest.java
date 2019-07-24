@@ -41,7 +41,7 @@ public class ClientControllerTest {
         assertNotNull(response);
     }*/
 
-    @Test
+    /*@Test
     public void putMoneyTest() {
         ResponseEntity<?> response = clientController.putMoney("test", new MockHttpServletRequest());
         assertNotNull(response);
@@ -57,5 +57,5 @@ public class ClientControllerTest {
     public void buyProductTest() {
         ResponseEntity<?> response = clientController.buyProduct("test", new MockHttpServletRequest());
         assertNotNull(response);
-    }
+    }*/
 }

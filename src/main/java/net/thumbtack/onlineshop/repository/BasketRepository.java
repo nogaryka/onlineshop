@@ -12,15 +12,16 @@ import java.util.Optional;
 
 @Repository
 public interface BasketRepository extends CrudRepository<Basket, Integer> {
-    @Query(value = "DELETE FROM baskets b WHERE b.id_product_id = :idProduct AND b.id_client_id = :idClient", nativeQuery = true)
+
     @Modifying
     @Transactional
+    @Query(value = "DELETE FROM baskets  WHERE id_product_id = :idProduct AND id_client_id = :idClient", nativeQuery = true)
     void deleteByIdClientAndIdProduct(@Param("idClient") Integer idClient, @Param("idProduct") Integer idProduct);
 
     @Query(value = "UPDATE baskets b SET b.amount = :amount WHERE b.id_product_id = :idProduct AND b.id_client_id = :idClient", nativeQuery = true)
     @Modifying
     @Transactional
-    Optional<Basket> updateByIdClientAndIdProduct(@Param("idClient") Integer idClient, @Param("idProduct") Integer idProduct,
+    void updateByIdClientAndIdProduct(@Param("idClient") Integer idClient, @Param("idProduct") Integer idProduct,
                                                   @Param("amount") Integer amount);
 
     @Query(value = "SELECT b.* FROM baskets b WHERE b.id_client_id = :idClient", nativeQuery = true)

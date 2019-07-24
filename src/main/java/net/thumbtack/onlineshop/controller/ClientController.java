@@ -63,22 +63,4 @@ public class ClientController {
         List<InformarionAdoutClientsForAdminResponse> clients = serviceClient.getInfoAboutClientsForAdmin(cookie);
         return ResponseEntity.ok().body(clients);
     }
-
-    @PutMapping(value = "/api/deposits",
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> putMoney(@RequestBody String name, HttpServletRequest response) {
-        return ResponseEntity.ok("");
-    }
-
-    @GetMapping(value = "/api/deposits",
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> getMoney(@RequestBody String name, HttpServletRequest response) {
-        return ResponseEntity.ok("");
-    }
-
-    @PostMapping(value = "/api/purchases",
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> buyProduct(@RequestBody String name, HttpServletRequest response) {
-        return ResponseEntity.ok("");
-    }
 }

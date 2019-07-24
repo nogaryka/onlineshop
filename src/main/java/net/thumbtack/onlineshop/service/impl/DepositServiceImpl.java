@@ -27,7 +27,7 @@ public class DepositServiceImpl implements DepositService {
     public RegistrationClientResponse putMoney(String cookie, DepositRequest request) throws OnlineShopExceptionOld {
         Session session = sessionRepository.findByToken(cookie).get();
         Client client = clientRepository.findByLogin(session.getLogin()).get();
-        client.setCash(request.getMoney());
+        client.setCash(client.getCash() + request.getMoney());
         clientRepository.save(client);
         return new RegistrationClientResponse(client.getId(), client.getFirstName(),
                 client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),

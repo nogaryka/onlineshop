@@ -46,7 +46,7 @@ public class BasketController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getBasket(@CookieValue(OnlineShopServer.COOKIE) String cookie) {
         List<BuyProductResponse> response = service.getBasket(cookie);
         return ResponseEntity.ok().body(response);
