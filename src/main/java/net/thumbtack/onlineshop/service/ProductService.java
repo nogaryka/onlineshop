@@ -20,5 +20,5 @@ public interface ProductService {
 
     AddProductResponse getProductById(String cookie, Integer id) throws OnlineShopExceptionOld;
 
-    Set<AddProductResponse> getAllProducts(Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld;
+    List<AddProductResponse> getAllProducts(Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld;
 }

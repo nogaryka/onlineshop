@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Transactional
@@ -26,4 +28,7 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Modifying
     @Query(value = "UPDATE categories c SET c.name = :name WHERE c.id = :id", nativeQuery = true)
     void editName(@Param("id") Integer id, @Param("name") String name);
+
+
+    Iterable<Category> findAllByIdInOrderByNameAsc(Iterable<Integer> id);
 }

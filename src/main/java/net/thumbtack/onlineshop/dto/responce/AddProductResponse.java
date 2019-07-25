@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.thumbtack.onlineshop.entity.Category;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,5 +21,13 @@ public class AddProductResponse {
     private Integer count;
 
     private List<Integer> idCategories;
+
+    public AddProductResponse(Integer id, String name, Integer price, Integer count) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.count = count;
+        this.idCategories = new ArrayList<>();
+    }
 }
 

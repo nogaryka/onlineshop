@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.List;
 import java.util.Set;
 
 import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
@@ -60,7 +61,7 @@ public class ProductController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllProducts(@RequestParam(value = "category", required = false) Set<Integer> category,
                                             @RequestParam(value = "order", required = false, defaultValue = "product") String order) {
-        Set<AddProductResponse> responseList = productService.getAllProducts(category, order);
-        return ResponseEntity.ok("");
+        List<AddProductResponse> responseList = productService.getAllProducts(category, order);
+        return ResponseEntity.ok().body(responseList);
     }
 }

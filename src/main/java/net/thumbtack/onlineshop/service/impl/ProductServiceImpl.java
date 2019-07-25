@@ -12,12 +12,10 @@ import net.thumbtack.onlineshop.service.ProductService;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.SetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,21 +81,59 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Set<AddProductResponse> getAllProducts(Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld {
-        Iterable<Category> categories = categoryRepository.findAllById(category);
-        Iterable<Product> products = productRepository.findDistinctProductsByCategoriesIn(categories);
-        Set<AddProductResponse> productSet = new TreeSet<>();
+    public List<AddProductResponse> getAllProducts(Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld {
+        Iterable<Category> categories = null;
+        if (category == null) {
+            paramOrder = "all";
+        }
+        else if (category.isEmpty()) {
+            paramOrder = "categoryLess";
+        } else {
+            categories = categoryRepository.findAllByIdInOrderByNameAsc(category);
+        }
+        List<AddProductResponse> responsesProducts = new ArrayList<>();
+        Iterable<Product> products;
         switch (paramOrder) {
             case "product":
-                //Iterable<Product> products = productRepository.findAllByCategory(category);
-                /*for (Product product : products) {
-                    productSet.add(new AddProductResponse(product.getId(), product.getName(),
-                            product.getPrice(), product.getCount(), product.getCategories()));
-                }*/
-                return productSet;
+             products = IterableUtils.toList(productRepository.findDistinctProductsByCategoriesInOrderByNameAsc(categories));
+             for (Product product : products) {
+                 responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
+                         product.getCategories().stream()
+                                 .map(Category::getId)
+                                 .collect(Collectors.toList())));
+             }
+                break;
             case "category":
-                return null;
+                products =  IterableUtils.toList(productRepository.findDistinctProductsByCategoriesInOrderByNameAsc(categories));
+                for (Category c : categories) {
+                    for (Product product : products) {
+                        if(product.getCategories().contains(c)) {
+                            responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
+                                    product.getCategories().stream()
+                                            .filter(category1 -> category1.getName().equals(c.getName()))
+                                            .map(Category::getId)
+                                            .collect(Collectors.toList())));
+                        }
+                    }
+                }
+                break;
+            case "all":
+                products = IterableUtils.toList(productRepository.findAll());
+                for (Product product : products) {
+                    responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
+                            product.getCategories().stream()
+                                    .map(Category::getId)
+                                    .collect(Collectors.toList())));
+                }
+                break;
+            case "categoryLess":
+                products = IterableUtils.toList(productRepository.findAllByCategoriesIsNullOrderByNameAsc());
+                for (Product product : products) {
+                    responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount()));
+                }
+                break;
+
         }
-        return null;
+        return responsesProducts;
     }
 }
