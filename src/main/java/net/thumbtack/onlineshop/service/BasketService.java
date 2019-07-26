@@ -14,6 +14,4 @@ public interface BasketService {
     BuyProductResponse editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld;
 
     List<BuyProductResponse> getBasket(String cookie) throws OnlineShopExceptionOld;
-
-    List<BuyProductResponse> buyProductsToBasket(String cookie, List<BuyProductRequest> request) throws OnlineShopExceptionOld;
 }

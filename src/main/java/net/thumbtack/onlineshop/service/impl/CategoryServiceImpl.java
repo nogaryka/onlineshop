@@ -103,19 +103,20 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<AddCategoryResponse> getCategoryList(String cookie) throws OnlineShopExceptionOld {
-        Map<Integer, AddCategoryResponse> response = new HashMap<>();
-        SessionServiceImpl sessionService = getSessionService(administratorRepository, clientRepository, sessionRepository);
-        if (sessionService.isAdmin(sessionService.getLogin(cookie))) {
-            Iterable<Category> list = categoryRepository.findAll();
-            for (Category category : list) {
-                response.put(category.getId(), new AddCategoryResponse(category.getId(), category.getName(),
-                        category.getIdParentCategory()));
+        Iterable<Category> categories = categoryRepository.findAllByIdParentCategoryEqualsOrderByNameAsc(0);
+        Iterable<Category> subCategories = categoryRepository.findAllByIdParentCategoryGreaterThanOrderByNameAsc(0);
+        List<AddCategoryResponse> responseList = new ArrayList<>();
+        for(Category category : categories) {
+            responseList.add(new AddCategoryResponse(category.getId(), category.getName(),
+                    category.getIdParentCategory()));
+            for(Category subCategory : subCategories) {
+                if (subCategory.getIdParentCategory().equals(category.getId())) {
+                    responseList.add(new AddCategoryResponse(subCategory.getId(), subCategory.getName(),
+                            subCategory.getIdParentCategory()));
+                }
             }
-            response = setNameForSubCategories(response);
-            return sortCategory(response);
-        } else {
-            throw new OnlineShopExceptionOld();
         }
+        return responseList;
     }
 
     public String getParentName(Integer idParent) {
@@ -131,29 +132,5 @@ public class CategoryServiceImpl implements CategoryService {
     public SessionServiceImpl getSessionService(AdministratorRepository administratorRepository,
                                                 ClientRepository clientRepository, SessionRepository sessionRepository) {
         return new SessionServiceImpl(administratorRepository, clientRepository, sessionRepository);
-    }
-
-    public List<AddCategoryResponse> sortCategory(Map<Integer, AddCategoryResponse> categories) {
-        List<AddCategoryResponse> list = new ArrayList<>();
-        for (Map.Entry<Integer, AddCategoryResponse> category : categories.entrySet()) {
-            list.add(category.getValue());
-        }
-        Collections.sort(list, (AddCategoryResponse a, AddCategoryResponse b) -> {
-            if (a.getIdParentCategory() == 0 || a.getIdParentCategory() == null) {
-                return a.getName().compareTo(b.getName());
-            } else {
-                return a.getNameParent().compareTo(b.getName());
-            }
-        });
-        return null;
-    }
-
-    public Map<Integer, AddCategoryResponse> setNameForSubCategories(Map<Integer, AddCategoryResponse> categories) {
-        for (Map.Entry<Integer, AddCategoryResponse> category : categories.entrySet()) {
-            if (category.getValue().getIdParentCategory() != 0 || category.getValue().getIdParentCategory() == null) {
-                category.getValue().setNameParent(categories.get(category.getValue().getIdParentCategory()).getName());
-            }
-        }
-        return categories;
     }
 }

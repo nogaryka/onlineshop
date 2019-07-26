@@ -59,11 +59,9 @@ public class CategoryController {
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> getAllCategories(@CookieValue(COOKIE) String cookie,
-                                              @RequestParam(value = "category", required = false) Integer[] idCategory,
-                                              @RequestParam(value = "order", required = false, defaultValue = "product") String order) {
+    public ResponseEntity<?> getAllCategories(@CookieValue(COOKIE) String cookie) {
         List<AddCategoryResponse> list = service.getCategoryList(cookie);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok().body(list);
     }
 }
 

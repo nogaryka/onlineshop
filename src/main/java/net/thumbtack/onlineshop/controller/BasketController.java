@@ -51,12 +51,6 @@ public class BasketController {
         List<BuyProductResponse> response = service.getBasket(cookie);
         return ResponseEntity.ok().body(response);
     }
-
-    @PostMapping(value = "/api/purchases/baskets",
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> buyProductsToBasket(@RequestBody String name, HttpServletRequest response) {
-        return ResponseEntity.ok("");
-    }
 }
 
 

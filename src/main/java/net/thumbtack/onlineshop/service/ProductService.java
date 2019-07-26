@@ -2,10 +2,7 @@ package net.thumbtack.onlineshop.service;
 
 import net.thumbtack.onlineshop.dto.request.AddProductRequest;
 import net.thumbtack.onlineshop.dto.request.EditProductRequest;
-import net.thumbtack.onlineshop.dto.request.ListProductRequest;
-import net.thumbtack.onlineshop.dto.request.ProductRequest;
 import net.thumbtack.onlineshop.dto.responce.AddProductResponse;
-import net.thumbtack.onlineshop.dto.responce.ProductResponse;
 import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 
 import java.util.List;
@@ -20,5 +17,5 @@ public interface ProductService {
 
     AddProductResponse getProductById(String cookie, Integer id) throws OnlineShopExceptionOld;
 
-    List<AddProductResponse> getAllProducts(Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld;
+    List<AddProductResponse> getAllProducts(String cookie, Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld;
 }

@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<AddProductResponse> getAllProducts(Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld {
+    public List<AddProductResponse> getAllProducts(String cookie, Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld {
         Iterable<Category> categories = null;
         if (category == null) {
             paramOrder = "all";
@@ -104,6 +104,10 @@ public class ProductServiceImpl implements ProductService {
              }
                 break;
             case "category":
+                products = IterableUtils.toList(productRepository.findAllByCategoriesIsNullOrderByNameAsc());
+                for (Product product : products) {
+                    responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount()));
+                }
                 products =  IterableUtils.toList(productRepository.findDistinctProductsByCategoriesInOrderByNameAsc(categories));
                 for (Category c : categories) {
                     for (Product product : products) {

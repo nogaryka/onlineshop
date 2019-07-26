@@ -14,14 +14,14 @@ import java.util.Set;
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Transactional
     @Modifying
-    @Query(value = "UPDATE categories c SET c.name = :name, c.id_parent-category = :idParentCategory WHERE c.id = :id",
+    @Query(value = "UPDATE categories c SET c.name = :name, c.idParentCategory = :idParentCategory WHERE c.id = :id",
             nativeQuery = true)
     void editCategory(@Param("id") Integer id, @Param("name") String name,
                       @Param("idParentCategory") Integer idParentCategory);
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE categories c SET c.id_parent-category = :idParentCategory WHERE c.id = :id", nativeQuery = true)
+    @Query(value = "UPDATE categories c SET c.idParentCategory = :idParentCategory WHERE c.id = :id", nativeQuery = true)
     void editIdParent(@Param("id") Integer id, @Param("idParentCategory") Integer idParentCategory);
 
     @Transactional
@@ -29,6 +29,9 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Query(value = "UPDATE categories c SET c.name = :name WHERE c.id = :id", nativeQuery = true)
     void editName(@Param("id") Integer id, @Param("name") String name);
 
-
     Iterable<Category> findAllByIdInOrderByNameAsc(Iterable<Integer> id);
+
+    Iterable<Category> findAllByIdParentCategoryGreaterThanOrderByNameAsc(Integer id);
+
+    Iterable<Category> findAllByIdParentCategoryEqualsOrderByNameAsc(Integer id);
 }

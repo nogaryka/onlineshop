@@ -12,8 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {//CrudRepository<Product, Integer>  {
-   // Iterable<Product> findAllByCategory(Iterable<Integer> idCategory);
-
     Iterable<Product> findDistinctProductsByCategoriesInOrderByNameAsc(Iterable<Category> idCategories);
 
     Iterable<Product> findAllByCategoriesInOrderByCategoriesNameAsc(Iterable<Category> idCategories);

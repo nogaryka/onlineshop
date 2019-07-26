@@ -59,9 +59,10 @@ public class ProductController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllProducts(@RequestParam(value = "category", required = false) Set<Integer> category,
+    public ResponseEntity<?> getAllProducts(@CookieValue(COOKIE) String cookie,
+                                            @RequestParam(value = "category", required = false) Set<Integer> category,
                                             @RequestParam(value = "order", required = false, defaultValue = "product") String order) {
-        List<AddProductResponse> responseList = productService.getAllProducts(category, order);
+        List<AddProductResponse> responseList = productService.getAllProducts("", category, order);
         return ResponseEntity.ok().body(responseList);
     }
 }

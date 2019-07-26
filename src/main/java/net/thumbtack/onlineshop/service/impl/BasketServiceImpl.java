@@ -88,9 +88,4 @@ public class BasketServiceImpl implements BasketService {
         }
         return list;
     }
-
-    @Override
-    public List<BuyProductResponse> buyProductsToBasket(String cookie, List<BuyProductRequest> request) throws OnlineShopExceptionOld {
-        return null;
-    }
 }

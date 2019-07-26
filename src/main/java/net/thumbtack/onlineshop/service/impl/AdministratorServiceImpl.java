@@ -1,15 +1,10 @@
 package net.thumbtack.onlineshop.service.impl;
 
-import net.thumbtack.onlineshop.OnlineShopServer;
-import net.thumbtack.onlineshop.dto.request.AdminReportRequest;
 import net.thumbtack.onlineshop.dto.request.EditAccountAdminRequest;
 import net.thumbtack.onlineshop.dto.request.LoginRequest;
 import net.thumbtack.onlineshop.dto.request.RegistrationAdminRequest;
-import net.thumbtack.onlineshop.dto.responce.AdminReportResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.entity.Administrator;
-import net.thumbtack.onlineshop.entity.Client;
-import net.thumbtack.onlineshop.entity.Session;
 import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.repository.ClientRepository;
@@ -61,8 +56,8 @@ public class AdministratorServiceImpl implements AdministratorService {
                 administrator.getLogin(), request.getNewPassword(), cookie, request.getPost());
     }
 
-    @Override
+    /*@Override
     public AdminReportResponse statement(String cookie, AdminReportRequest request) throws OnlineShopExceptionOld {
         return null;
-    }
+    }*/
 }

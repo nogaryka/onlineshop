@@ -25,6 +25,7 @@ public class Category implements Serializable {
     @Column(unique = true)
     private String name;
 
+    @Column(name = "idParentCategory")
     private Integer idParentCategory = 0;
 
     public Category(String name, Integer idParentCategory) {

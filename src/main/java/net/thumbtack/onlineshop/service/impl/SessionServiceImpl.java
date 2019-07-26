@@ -5,7 +5,6 @@ import net.thumbtack.onlineshop.dto.request.LoginRequest;
 import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationClientResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
-import net.thumbtack.onlineshop.dto.responce.SettingsServerResponse;
 import net.thumbtack.onlineshop.entity.Administrator;
 import net.thumbtack.onlineshop.entity.Client;
 import net.thumbtack.onlineshop.entity.Session;
@@ -60,10 +59,10 @@ public class SessionServiceImpl implements SessionService {
         sessionRepository.deleteByToken(token);
     }
 
-    @Override
+   /* @Override
     public SettingsServerResponse getSettingsServer(String cookie) throws OnlineShopExceptionOld {
         return null;
-    }
+    }*/
 
     @Override
     public void clearDB() throws OnlineShopExceptionOld {
