@@ -5,16 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.thumbtack.onlineshop.validator.annotation.GreatZero;
 
-import javax.validation.ValidationException;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditCategoryRequest {
 
-    private String name ;
+    private String name;
 
     @GreatZero
     private Integer idParent;
-
 }

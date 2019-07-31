@@ -12,6 +12,7 @@ import net.thumbtack.onlineshop.repository.ClientRepository;
 import net.thumbtack.onlineshop.repository.ProductRepository;
 import net.thumbtack.onlineshop.repository.SessionRepository;
 import net.thumbtack.onlineshop.service.BasketService;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class BasketServiceImpl implements BasketService {
         if (productRepository.existsById(request.getId())) {
             Product product = productRepository.findById(request.getId()).get();
             if (!request.getName().equals(product.getName()) || !request.getPrice().equals(product.getPrice())) {
-                throw new OnlineShopExceptionOld();
+                throw new OnlineShopExceptionOld("Цена или имя указанного продукта не совпадает с указанным именем и ценой в запросе");
             }
             Basket.IdClientAndProduct idClientAndProduct = new Basket.IdClientAndProduct(client, product);
             basket = new Basket(idClientAndProduct, request.getCount());
@@ -52,6 +53,8 @@ public class BasketServiceImpl implements BasketService {
                 product = productRepository.findById(basketFromList.getIdClientAndProduct().getIdProduct().getId()).get();
                 list.add(new BuyProductResponse(product.getId(), product.getName(), product.getPrice(), basketFromList.getAmount()));
             }
+        } else {
+            throw new OnlineShopExceptionOld("Такого товара не существует");
         }
         return list;
     }
@@ -65,14 +68,22 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public BuyProductResponse editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld {
+    public List<BuyProductResponse> editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld {
         Session session = sessionRepository.findByToken(cookie).get();
         Client client = clientRepository.findByLogin(session.getLogin()).get();
+        List<BuyProductResponse> list = new ArrayList<>();
         if (productRepository.existsById(request.getId())) {
             Product product = productRepository.findById(request.getId()).get();
             basketRepository.updateByIdClientAndIdProduct(client.getId(), product.getId(), request.getCount());
+            List<Basket> baskets = IterableUtils.toList(basketRepository.findAll());
+            for (Basket basket : baskets) {
+                list.add(new BuyProductResponse(basket.getIdClientAndProduct().getIdProduct().getId(),
+                        basket.getIdClientAndProduct().getIdProduct().getName(),
+                        basket.getIdClientAndProduct().getIdProduct().getPrice(),
+                        basket.getIdClientAndProduct().getIdProduct().getCount()));
+            }
         }
-        return new BuyProductResponse(request.getId(), request.getName(), request.getPrice(), request.getCount());
+        return list;
     }
 
     @Override

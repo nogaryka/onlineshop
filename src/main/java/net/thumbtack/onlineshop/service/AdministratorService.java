@@ -9,7 +9,5 @@ public interface AdministratorService {
     RegistrationAdminResponse addAdmin(RegistrationAdminRequest request) throws OnlineShopExceptionOld;
 
     RegistrationAdminResponse editProfileAdmin(String cookie, EditAccountAdminRequest request) throws OnlineShopExceptionOld;
-
-   // AdminReportResponse statement(String cookie, AdminReportRequest request) throws OnlineShopExceptionOld;
 }
 

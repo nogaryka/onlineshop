@@ -7,14 +7,18 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import static net.thumbtack.onlineshop.config.ConstConfig.PATH_MAX_NAME_LENGTH;
+
 public class MaxNameLengthValidate implements ConstraintValidator<MaxNameLength, String> {
-    private static final String PATH_MAX_NAME_LENGTH = "${max_name_length}";
 
     @Value(PATH_MAX_NAME_LENGTH)
     private int maxNameLength;
 
     @Override
     public boolean isValid(String validField, ConstraintValidatorContext constraintValidatorContext) {
+        if (validField == null || validField.isEmpty()) {
+            return true;
+        }
         if (maxNameLength < validField.length()) {
             throw new OnlineShopValidatorException(constraintValidatorContext.getDefaultConstraintMessageTemplate());
         }

@@ -3,7 +3,6 @@ package net.thumbtack.onlineshop.dto.responce;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.thumbtack.onlineshop.entity.Category;
 
 import java.util.ArrayList;
 import java.util.List;

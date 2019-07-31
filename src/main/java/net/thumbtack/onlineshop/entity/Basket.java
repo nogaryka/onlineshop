@@ -25,17 +25,16 @@ public class Basket {
 
     private Integer amount;
 
-
     @Data
     @Embeddable
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class IdClientAndProduct  implements Serializable{
-        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public static class IdClientAndProduct implements Serializable {
+        @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
         @JoinColumn
         private Client idClient;
 
-        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+        @OneToOne(fetch = FetchType.EAGER)
         @JoinColumn
         private Product idProduct;
     }

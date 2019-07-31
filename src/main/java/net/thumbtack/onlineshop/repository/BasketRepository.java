@@ -3,15 +3,13 @@ package net.thumbtack.onlineshop.repository;
 import net.thumbtack.onlineshop.entity.Basket;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Repository
-public interface BasketRepository extends CrudRepository<Basket, Integer> {
+public interface BasketRepository extends PagingAndSortingRepository<Basket, Integer> { // CrudRepository<Basket, Integer> {
 
     @Modifying
     @Transactional
@@ -22,7 +20,7 @@ public interface BasketRepository extends CrudRepository<Basket, Integer> {
     @Modifying
     @Transactional
     void updateByIdClientAndIdProduct(@Param("idClient") Integer idClient, @Param("idProduct") Integer idProduct,
-                                                  @Param("amount") Integer amount);
+                                      @Param("amount") Integer amount);
 
     @Query(value = "SELECT b.* FROM baskets b WHERE b.id_client_id = :idClient", nativeQuery = true)
     @Transactional

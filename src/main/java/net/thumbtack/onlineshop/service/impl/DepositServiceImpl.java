@@ -2,7 +2,6 @@ package net.thumbtack.onlineshop.service.impl;
 
 import net.thumbtack.onlineshop.dto.request.DepositRequest;
 import net.thumbtack.onlineshop.dto.responce.RegistrationClientResponse;
-import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
 import net.thumbtack.onlineshop.entity.Client;
 import net.thumbtack.onlineshop.entity.Session;
 import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
@@ -31,7 +30,7 @@ public class DepositServiceImpl implements DepositService {
         clientRepository.save(client);
         return new RegistrationClientResponse(client.getId(), client.getFirstName(),
                 client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
-                cookie, client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
+                cookie, client.getEmail(), client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
     }
 
     @Override
@@ -40,6 +39,6 @@ public class DepositServiceImpl implements DepositService {
         Client client = clientRepository.findByLogin(session.getLogin()).get();
         return new RegistrationClientResponse(client.getId(), client.getFirstName(),
                 client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
-                cookie, client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
+                cookie, client.getEmail(), client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
     }
 }

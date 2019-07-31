@@ -1,6 +1,5 @@
 package net.thumbtack.onlineshop.service.impl;
 
-import net.thumbtack.onlineshop.OnlineShopServer;
 import net.thumbtack.onlineshop.dto.request.LoginRequest;
 import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationClientResponse;
@@ -19,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
 
 @Service
 @Transactional
@@ -44,7 +45,7 @@ public class SessionServiceImpl implements SessionService {
             Session session = addCookie(client.getLogin());
             return new RegistrationClientResponse(client.getId(), client.getFirstName(),
                     client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
-                    session.getToken(), client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
+                    session.getToken(), client.getEmail(), client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
         } else {
             Administrator administrator = administratorOptional.get();
             Session session = addCookie(administrator.getLogin());
@@ -59,26 +60,24 @@ public class SessionServiceImpl implements SessionService {
         sessionRepository.deleteByToken(token);
     }
 
-   /* @Override
-    public SettingsServerResponse getSettingsServer(String cookie) throws OnlineShopExceptionOld {
-        return null;
-    }*/
-
-    @Override
-    public void clearDB() throws OnlineShopExceptionOld {
-
-    }
-
     public Session addCookie(String login) {
-        return sessionRepository.save(new Session(OnlineShopServer.COOKIE,
-                UUID.randomUUID().toString(), login));
+        Session session;
+        if (!sessionRepository.existsByLogin(login)) {
+            session = sessionRepository.save(new Session(COOKIE,
+                    UUID.randomUUID().toString(), login));
+            return session;
+        } else {
+            session = sessionRepository.findByLogin(login).get();
+            session.setToken(UUID.randomUUID().toString());
+            return session;
+        }
     }
 
-    public boolean isAdmin(String login){
+    public boolean isAdmin(String login) {
         return administratorRepository.existsByLogin(login);
     }
 
-    public boolean isClient(String login){
+    public boolean isClient(String login) {
         return clientRepository.existsByLogin(login);
     }
 

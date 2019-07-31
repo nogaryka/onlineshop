@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Transactional
@@ -34,4 +32,6 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     Iterable<Category> findAllByIdParentCategoryGreaterThanOrderByNameAsc(Integer id);
 
     Iterable<Category> findAllByIdParentCategoryEqualsOrderByNameAsc(Integer id);
+
+    Iterable<Category> findAllByOrderByNameAsc();
 }

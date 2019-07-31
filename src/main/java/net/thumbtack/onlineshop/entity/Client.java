@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Table(name = "clients")
@@ -27,9 +26,6 @@ public class Client extends User {
     private String phoneNumber;
 
     private Integer cash = 0;
-
-//    @OneToMany(mappedBy = "")
-//    private List<Basket> baskets;
 
     public Client(String firstName, String lastName, String patronymic, String login, String password, String email,
                   String phoneNumber, String postalAddress) {

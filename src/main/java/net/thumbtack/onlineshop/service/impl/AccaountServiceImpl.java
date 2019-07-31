@@ -30,21 +30,20 @@ public class AccaountServiceImpl implements AccaountService {
 
     @Override
     public RegistrationUserResponse getInfoAboutMe(String cookie) throws OnlineShopExceptionOld {
-       Session session = sessionRepository.findByToken(cookie).get();
-       SessionServiceImpl sessionService = new SessionServiceImpl(administratorRepository, clientRepository,
-               sessionRepository);
-       if(sessionService.isAdmin(session.getLogin())){
-           Administrator administrator = administratorRepository.findByLogin(session.getLogin()).get();
-           return new RegistrationAdminResponse(administrator.getId(),
-                   administrator.getFirstName(), administrator.getLastName(), administrator.getPatronymic(),
-                   administrator.getLogin(), administrator.getPassword(), session.getToken(), administrator.getPost());
-       }
-       else if (sessionService.isClient(session.getLogin())) {
-           Client client = clientRepository.findByLogin(session.getLogin()).get();
-           return new RegistrationClientResponse(client.getId(), client.getFirstName(),
-                   client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
-                   session.getToken(), client.getEmail(),  client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
-       }
-       return null;
+        Session session = sessionRepository.findByToken(cookie).get();
+        SessionServiceImpl sessionService = new SessionServiceImpl(administratorRepository, clientRepository,
+                sessionRepository);
+        if (sessionService.isAdmin(session.getLogin())) {
+            Administrator administrator = administratorRepository.findByLogin(session.getLogin()).get();
+            return new RegistrationAdminResponse(administrator.getId(),
+                    administrator.getFirstName(), administrator.getLastName(), administrator.getPatronymic(),
+                    administrator.getLogin(), administrator.getPassword(), session.getToken(), administrator.getPost());
+        } else if (sessionService.isClient(session.getLogin())) {
+            Client client = clientRepository.findByLogin(session.getLogin()).get();
+            return new RegistrationClientResponse(client.getId(), client.getFirstName(),
+                    client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
+                    session.getToken(), client.getEmail(), client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
+        }
+        return null;
     }
 }

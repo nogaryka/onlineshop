@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class AddCategoryResponse {
     private Integer id;
 
-    private  String name;
+    private String name;
 
     private Integer idParentCategory;
 

@@ -22,4 +22,12 @@ public class RegistrationClientRequest extends RegistrationUserRequest {
     @Pattern(regexp = "[+]?[8 7][-]?\\d{3}[-]?\\d{3}[-]?\\d{2}[-]?\\d{2}")
     @NotBlank
     private String phoneNumber;
+
+    public RegistrationClientRequest(String firstName, String lastName, String patronymic, String login,
+                                     String password, String email, String postalAddress, String phoneNumber) {
+        super(firstName, lastName, patronymic, login, password);
+        this.email = email;
+        this.postalAddress = postalAddress;
+        this.phoneNumber = phoneNumber;
+    }
 }

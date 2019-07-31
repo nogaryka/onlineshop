@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
+import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
 
 
 @RestController
@@ -41,7 +41,7 @@ public class AdministratorController {
     public ResponseEntity<?> addAdmin(@Valid @RequestBody RegistrationAdminRequest request,
                                       HttpServletResponse response) {
         RegistrationAdminResponse registerResponse = adminService.addAdmin(request);
-        Cookie cookie = new Cookie(COOKIE,  registerResponse.getToken());
+        Cookie cookie = new Cookie(COOKIE, registerResponse.getToken());
         response.addCookie(cookie);
         return ResponseEntity.ok().body(registerResponse);
     }
@@ -55,7 +55,7 @@ public class AdministratorController {
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> statement(@RequestBody String name,HttpServletRequest response) {
+    public ResponseEntity<?> statement(@RequestBody String name, HttpServletRequest response) {
         return ResponseEntity.ok("");
     }
 }

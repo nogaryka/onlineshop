@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
+import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -23,7 +23,7 @@ public class AccountController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getInfoAboutMe(@CookieValue(COOKIE) String cookie) {
+    public ResponseEntity<?> getInfoAboutMe(@CookieValue(value = COOKIE) String cookie) {
         RegistrationUserResponse response = accaountService.getInfoAboutMe(cookie);
         return ResponseEntity.ok().body(response);
     }

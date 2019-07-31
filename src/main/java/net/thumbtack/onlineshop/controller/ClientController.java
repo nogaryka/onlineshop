@@ -1,11 +1,9 @@
 package net.thumbtack.onlineshop.controller;
 
-import net.thumbtack.onlineshop.OnlineShopServer;
 import net.thumbtack.onlineshop.dto.request.EditAccountClientRequest;
 import net.thumbtack.onlineshop.dto.request.RegistrationClientRequest;
 import net.thumbtack.onlineshop.dto.responce.InformarionAdoutClientsForAdminResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationClientResponse;
-import net.thumbtack.onlineshop.entity.Session;
 import net.thumbtack.onlineshop.service.ClientService;
 import net.thumbtack.onlineshop.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
-import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
+import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
 
 @RestController
 @RequestMapping("/api/clients")

@@ -1,6 +1,5 @@
 package net.thumbtack.onlineshop.controller;
 
-import net.thumbtack.onlineshop.OnlineShopServer;
 import net.thumbtack.onlineshop.dto.request.BuyProductRequest;
 import net.thumbtack.onlineshop.dto.request.BuyProductToBasketRequest;
 import net.thumbtack.onlineshop.dto.responce.BuyProductResponse;
@@ -14,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
+
 @RestController
 @RequestMapping("/api/purchases")
 public class PurchaseController {
-    private  final PurchaseService purchaseService;
+    private final PurchaseService purchaseService;
 
     @Autowired
     public PurchaseController(PurchaseService purchaseService) {
@@ -25,7 +26,7 @@ public class PurchaseController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> buyProduct(@CookieValue(OnlineShopServer.COOKIE) String cookie,
+    public ResponseEntity<?> buyProduct(@CookieValue(COOKIE) String cookie,
                                         @Valid @RequestBody BuyProductRequest request) {
         BuyProductResponse response = purchaseService.buyProduct(cookie, request);
         return ResponseEntity.ok().body(response);
@@ -33,9 +34,19 @@ public class PurchaseController {
 
     @PostMapping(value = "/baskets",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> buyProductsToBasket(@CookieValue(OnlineShopServer.COOKIE) String cookie,
+    public ResponseEntity<?> buyProductsToBasket(@CookieValue(COOKIE) String cookie,
                                                  @Valid @RequestBody List<BuyProductToBasketRequest> request) {
         BuyProductToBasketResponse response = purchaseService.buyProductsToBasket(cookie, request);
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity<?> summaryList(@CookieValue(COOKIE) String cookie,
+                                          @RequestParam(name = "category", required = false) List<Integer> idCategories,
+                                          @RequestParam(name = "product", required = false) List<Integer> idProducts,
+                                          @RequestParam(name = "client", required = false) List<Integer> idClients,
+                                          @RequestParam(name = "offset", required = false) Integer offset,
+                                          @RequestParam(name = "limit", required = false) Integer limit) {
+        return purchaseService.getSummaryList("", idCategories, idProducts, idClients, offset, limit);
     }
 }

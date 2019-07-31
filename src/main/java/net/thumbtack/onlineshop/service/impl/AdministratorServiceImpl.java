@@ -36,8 +36,8 @@ public class AdministratorServiceImpl implements AdministratorService {
                 request.getPassword(),
                 request.getPost());
 
-        if(clientRepository.existsByLogin(administrator.getLogin())) {
-            throw new OnlineShopExceptionOld();
+        if (clientRepository.existsByLogin(administrator.getLogin())) {
+            throw new OnlineShopExceptionOld("Такой логин уже занят");
         }
         administratorRepository.save(administrator);
         RegistrationAdminResponse response = (RegistrationAdminResponse) new SessionServiceImpl(administratorRepository,

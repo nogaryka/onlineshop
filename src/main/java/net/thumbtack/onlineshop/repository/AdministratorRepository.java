@@ -12,8 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface AdministratorRepository extends CrudRepository<Administrator, Integer> {
-    @Query(value = "SELECT a.* FROM administrators a WHERE UPPER(a.login) = :login AND a.password = :password", nativeQuery = true)
-    Optional<Administrator> findByLoginAndPassword(@Param("login") String login, @Param("password") String password);
+    Optional<Administrator> findByLoginAndPassword(String login, String password);
 
     boolean existsByLogin(String login);
 

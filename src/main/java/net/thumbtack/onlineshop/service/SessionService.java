@@ -8,8 +8,4 @@ public interface SessionService {
     RegistrationUserResponse login(LoginRequest request) throws OnlineShopExceptionOld;
 
     void logout(String cookie) throws OnlineShopExceptionOld;
-
-    //SettingsServerResponse getSettingsServer(String cookie) throws OnlineShopExceptionOld;
-
-    void clearDB() throws OnlineShopExceptionOld;
 }

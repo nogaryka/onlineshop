@@ -10,9 +10,7 @@ import net.thumbtack.onlineshop.repository.CategoryRepository;
 import net.thumbtack.onlineshop.repository.ProductRepository;
 import net.thumbtack.onlineshop.service.ProductService;
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.collections4.SetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -32,8 +30,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public AddProductResponse addProduct(String cookie, AddProductRequest request) throws OnlineShopExceptionOld {
-        List<Category> categoryList;
-        categoryList = IterableUtils.toList(categoryRepository.findAllById(request.getIdCategories()));
+        List<Category> categoryList = new ArrayList<>();
+        if (request.getIdCategories() != null) {
+            categoryList = IterableUtils.toList(categoryRepository.findAllById(request.getIdCategories()));
+        }
         Product product = new Product(request.getName(), request.getPrice(), request.getCount(), categoryList);
         product = productRepository.save(product);
         return new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
@@ -42,17 +42,27 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public AddProductResponse editProduct(String cookie, EditProductRequest request, Integer id) throws OnlineShopExceptionOld {
-        List<Category> categoryList;
-        categoryList = IterableUtils.toList(categoryRepository.findAllById(request.getIdCategory()));
+        if (productRepository.existsByNameAndIdNot(request.getName(), id)) {
+            throw new OnlineShopExceptionOld("Продукт с таким названием уже существует");
+        }
         if (productRepository.existsById(id)) {
             Product product = productRepository.findById(id).get();
-            product.setName(request.getName().equals("") ? product.getName() : request.getName());
+            product.setName(request.getName() == null || request.getName().equals("") ? product.getName() : request.getName());
             product.setPrice(request.getPrice() == null ? product.getPrice() : request.getPrice());
             product.setCount(request.getCount() == null ? product.getCount() : request.getCount());
-            product.setCategories(request.getIdCategory() == null ? product.getCategories() : categoryList);
+            List<Category> categoryList;
+            List<Integer> idCategory = new ArrayList<>();
+            if (request.getIdCategory() != null) {
+                categoryList = IterableUtils.toList(categoryRepository.findAllById(request.getIdCategory()));
+                product.setCategories(request.getIdCategory() == null ? product.getCategories() : categoryList);
+            } else {
+                for (Category category : product.getCategories()) {
+                    idCategory.add(category.getId());
+                }
+            }
             product = productRepository.save(product);
             return new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
-                    request.getIdCategory());
+                    idCategory);
         }
         return null;
     }
@@ -62,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
         } else {
-            throw new OnlineShopExceptionOld();
+            throw new OnlineShopExceptionOld("Такого продукта не существует");
         }
     }
 
@@ -83,10 +93,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<AddProductResponse> getAllProducts(String cookie, Set<Integer> category, String paramOrder) throws OnlineShopExceptionOld {
         Iterable<Category> categories = null;
-        if (category == null) {
+        if (category == null && paramOrder.equals("product")) {
             paramOrder = "all";
-        }
-        else if (category.isEmpty()) {
+        } else if (category == null && paramOrder.equals("category")) {
+            categories = categoryRepository.findAllByOrderByNameAsc();
+        } else if (category.isEmpty()) {
             paramOrder = "categoryLess";
         } else {
             categories = categoryRepository.findAllByIdInOrderByNameAsc(category);
@@ -95,23 +106,23 @@ public class ProductServiceImpl implements ProductService {
         Iterable<Product> products;
         switch (paramOrder) {
             case "product":
-             products = IterableUtils.toList(productRepository.findDistinctProductsByCategoriesInOrderByNameAsc(categories));
-             for (Product product : products) {
-                 responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
-                         product.getCategories().stream()
-                                 .map(Category::getId)
-                                 .collect(Collectors.toList())));
-             }
+                products = IterableUtils.toList(productRepository.findDistinctProductsByCategoriesInOrderByNameAsc(categories));
+                for (Product product : products) {
+                    responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
+                            product.getCategories().stream()
+                                    .map(Category::getId)
+                                    .collect(Collectors.toList())));
+                }
                 break;
             case "category":
                 products = IterableUtils.toList(productRepository.findAllByCategoriesIsNullOrderByNameAsc());
                 for (Product product : products) {
                     responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount()));
                 }
-                products =  IterableUtils.toList(productRepository.findDistinctProductsByCategoriesInOrderByNameAsc(categories));
+                products = IterableUtils.toList(productRepository.findDistinctProductsByCategoriesInOrderByNameAsc(categories));
                 for (Category c : categories) {
                     for (Product product : products) {
-                        if(product.getCategories().contains(c)) {
+                        if (product.getCategories().contains(c)) {
                             responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
                                     product.getCategories().stream()
                                             .filter(category1 -> category1.getName().equals(c.getName()))
@@ -122,7 +133,7 @@ public class ProductServiceImpl implements ProductService {
                 }
                 break;
             case "all":
-                products = IterableUtils.toList(productRepository.findAll());
+                products = IterableUtils.toList(productRepository.findAllByOrderByNameAsc());
                 for (Product product : products) {
                     responsesProducts.add(new AddProductResponse(product.getId(), product.getName(), product.getPrice(), product.getCount(),
                             product.getCategories().stream()

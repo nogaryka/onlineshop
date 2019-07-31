@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
-import static net.thumbtack.onlineshop.OnlineShopServer.COOKIE;
+import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
 
 @RestController
 @RequestMapping("/api/products")
@@ -38,15 +38,15 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editProduct(@CookieValue(COOKIE) String cookie,
-                                         @Valid @RequestBody EditProductRequest request, Integer id) {
+                                         @Valid @RequestBody EditProductRequest request,
+                                         @PathVariable("id") Integer id) {
         AddProductResponse response = productService.editProduct(cookie, request, id);
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping(value = "{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteProduct(@CookieValue(COOKIE) String cookie, Integer id) {
+    public ResponseEntity<?> deleteProduct(@CookieValue(COOKIE) String cookie, @PathVariable("id") Integer id) {
         productService.deleteProduct(cookie, id);
         return ResponseEntity.ok("");
     }
@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllProducts(@CookieValue(COOKIE) String cookie,
+    public ResponseEntity<?> getAllProducts(//@CookieValue(COOKIE) String cookie,
                                             @RequestParam(value = "category", required = false) Set<Integer> category,
                                             @RequestParam(value = "order", required = false, defaultValue = "product") String order) {
         List<AddProductResponse> responseList = productService.getAllProducts("", category, order);

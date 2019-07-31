@@ -1,19 +1,11 @@
 package net.thumbtack.onlineshop.service.impl;
 
-import net.thumbtack.onlineshop.dto.request.BuyProductRequest;
-import net.thumbtack.onlineshop.dto.request.DepositRequest;
 import net.thumbtack.onlineshop.dto.request.EditAccountClientRequest;
 import net.thumbtack.onlineshop.dto.request.LoginRequest;
 import net.thumbtack.onlineshop.dto.request.RegistrationClientRequest;
-import net.thumbtack.onlineshop.dto.request.RegistrationUserRequest;
-import net.thumbtack.onlineshop.dto.responce.BuyProductResponse;
 import net.thumbtack.onlineshop.dto.responce.InformarionAdoutClientsForAdminResponse;
-import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.dto.responce.RegistrationClientResponse;
-import net.thumbtack.onlineshop.dto.responce.RegistrationUserResponse;
-import net.thumbtack.onlineshop.entity.Administrator;
 import net.thumbtack.onlineshop.entity.Client;
-import net.thumbtack.onlineshop.entity.Session;
 import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.repository.AdministratorRepository;
 import net.thumbtack.onlineshop.repository.ClientRepository;
@@ -46,9 +38,10 @@ public class ClientServiceImpl implements ClientService {
                 request.getPostalAddress());
 
 
-        if(administratorRepository.existsByLogin(client.getLogin())) {
-            throw new OnlineShopExceptionOld();
+        if (administratorRepository.existsByLogin(client.getLogin())) {
+            throw new OnlineShopExceptionOld("Такого клиента не существует");
         }
+        client.setPhoneNumber(client.getPhoneNumber().replace("-", ""));
         clientRepository.save(client);
         RegistrationClientResponse response = (RegistrationClientResponse) new SessionServiceImpl(administratorRepository,
                 clientRepository, sessionRepository).login(new LoginRequest(client.getLogin(),
@@ -64,12 +57,12 @@ public class ClientServiceImpl implements ClientService {
                 request.getPhoneNumber());
         return new RegistrationClientResponse(client.getId(), request.getFirstName(),
                 request.getLastName(), request.getPatronymic(), client.getLogin(), request.getNewPassword(),
-                cookie, request.getEmail(),  request.getPhoneNumber(), request.getPostalAddress(), client.getCash());
+                cookie, request.getEmail(), request.getPhoneNumber(), request.getPostalAddress(), client.getCash());
     }
 
     @Override
     public List<InformarionAdoutClientsForAdminResponse> getInfoAboutClientsForAdmin(String cookie) throws OnlineShopExceptionOld {
-        if(administratorRepository.existsByLogin(sessionRepository.findByToken(cookie).get().getLogin())) {
+        if (administratorRepository.existsByLogin(sessionRepository.findByToken(cookie).get().getLogin())) {
             List<InformarionAdoutClientsForAdminResponse> clients = new ArrayList<>();
             Iterable<Client> list = clientRepository.findAll();
             for (Client client : list) {
@@ -79,7 +72,7 @@ public class ClientServiceImpl implements ClientService {
             }
             return clients;
         } else {
-            throw new OnlineShopExceptionOld();
+            throw new OnlineShopExceptionOld("Данное действие доступно только для администратора");
         }
     }
 }

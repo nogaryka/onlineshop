@@ -11,7 +11,7 @@ public interface BasketService {
 
     void deleteProductFromBasketById(String cookie, Integer id) throws OnlineShopExceptionOld;
 
-    BuyProductResponse editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld;
+    List<BuyProductResponse> editProductAmountInBasket(String cookie, BuyProductRequest request) throws OnlineShopExceptionOld;
 
     List<BuyProductResponse> getBasket(String cookie) throws OnlineShopExceptionOld;
 }

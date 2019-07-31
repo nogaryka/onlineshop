@@ -9,7 +9,7 @@ public class GreatZeroValid implements ConstraintValidator<GreatZero, Integer> {
 
     @Override
     public boolean isValid(Integer id, ConstraintValidatorContext constraintValidatorContext) {
-        if(id != null) {
+        if (id != null) {
             return id > -1;
         } else {
             return true;

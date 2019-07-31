@@ -17,32 +17,31 @@ import javax.validation.constraints.Size;
 public class EditAccountClientRequest {
     @NotBlank
     @MaxNameLength
-    @Pattern(regexp = "[A-Za-z]+")
+    @Pattern(regexp = "[А-Яа-яA-Za-z \\-]+")
     private String firstName;
 
     @NotBlank
     @MaxNameLength
-    @Pattern(regexp = "[A-Za-z]+")
+    @Pattern(regexp =  "[А-Яа-яA-Za-z \\-]+")
     @Size(min = 2, max = 30)
     private String lastName;
 
     @MaxNameLength
-    @Pattern(regexp = "[A-Za-z]+")
+    @Pattern(regexp =  "[А-Яа-яA-Za-z \\-]+")
     @Size(max = 30)
     private String patronymic;
 
     @MinPasswordLength
-    @Pattern(regexp = "[A-Za-z0-9]+")
     private String password;
 
     @MinPasswordLength
-    @Pattern(regexp = "[A-Za-z0-9]+")
     private String newPassword;
 
     @NotBlank
     @Email
     private String email;
 
+    @Pattern(regexp = "[А-Яа-яA-Za-z0-9 ]+")
     @NotBlank
     private String postalAddress;
 

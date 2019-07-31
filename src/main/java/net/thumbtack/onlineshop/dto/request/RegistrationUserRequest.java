@@ -13,17 +13,17 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class RegistrationUserRequest {
-    @Pattern(regexp = "[А-Яа-яA-Za-z_\\-]+")
+    @Pattern(regexp = "[А-Яа-яA-Za-z \\-]+")
     @NotBlank
     @MaxNameLength
     private String firstName;
 
-    @Pattern(regexp = "[А-Яа-яA-Za-z_\\-]+")
+    @Pattern(regexp = "[А-Яа-яA-Za-z \\-]+")
     @NotBlank
     @MaxNameLength
     private String lastName;
 
-    @Pattern(regexp = "[А-Яа-яA-Za-z_\\-]+")
+    @Pattern(regexp = "[А-Яа-яA-Za-z \\-]+")
     @MaxNameLength
     private String patronymic;
 
@@ -35,4 +35,11 @@ public abstract class RegistrationUserRequest {
     @MaxNameLength
     @MinPasswordLength
     private String password;
+
+    public RegistrationUserRequest(String firstName, String lastName, String login, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.login = login;
+        this.password = password;
+    }
 }
