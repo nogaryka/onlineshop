@@ -1,4 +1,4 @@
-package net.thumbtack.onlineshop.controller;
+package net.thumbtack.onlineshop.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.onlineshop.dto.request.AddProductRequest;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
+import static net.thumbtack.onlineshop.exceptions.ErrorCod.INCORRECT_PRODUCT_ID_IN_BASKET;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -43,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class BasketControllerTest {
+public class BasketTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -130,7 +131,7 @@ public class BasketControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
         OnlineShopExceptionOld response = objectMapper.readValue(result.getResponse().getContentAsString(), OnlineShopExceptionOld.class);
-        assertEquals("Такого товара не существует", response.getMessage());
+        assertEquals(INCORRECT_PRODUCT_ID_IN_BASKET, response.getMessage());
     }
 
     @Test

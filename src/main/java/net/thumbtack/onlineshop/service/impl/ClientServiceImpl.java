@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.thumbtack.onlineshop.exceptions.ErrorCod.THIS_LOGIN_IS_EXIST;
+
 @Service
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
@@ -39,7 +41,7 @@ public class ClientServiceImpl implements ClientService {
 
 
         if (administratorRepository.existsByLogin(client.getLogin())) {
-            throw new OnlineShopExceptionOld("Такого клиента не существует");
+            throw new OnlineShopExceptionOld(THIS_LOGIN_IS_EXIST);
         }
         client.setPhoneNumber(client.getPhoneNumber().replace("-", ""));
         clientRepository.save(client);

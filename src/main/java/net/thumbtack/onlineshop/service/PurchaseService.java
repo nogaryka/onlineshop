@@ -14,8 +14,8 @@ public interface PurchaseService {
 
     BuyProductToBasketResponse buyProductsToBasket(String cookie, List<BuyProductToBasketRequest> request) throws OnlineShopExceptionOld;
 
-    ResponseEntity<?> getSummaryList(String cookie, List<Integer> idCategories, List<Integer> idProducts,
-                                     List<Integer> idClients, Integer offset, Integer limit);
+    ResponseEntity<?>  getSummaryList(String cookie, List<Integer> idCategories, List<Integer> idProducts,
+                                     List<Integer> idClients, Integer offset, Integer limit, String mod);
 }
 
 

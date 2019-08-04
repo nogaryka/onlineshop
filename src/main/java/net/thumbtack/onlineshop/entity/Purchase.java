@@ -19,13 +19,13 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Purchase {
+public class Purchase  {
     @EmbeddedId
     private IdClientAndProduct idClientAndProduct;
 
     private Integer amount;
 
-    private Integer totalCost;
+    private Integer totalPricePerItem;
 
     @Data
     @Embeddable

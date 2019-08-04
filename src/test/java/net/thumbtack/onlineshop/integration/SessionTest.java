@@ -1,4 +1,4 @@
-package net.thumbtack.onlineshop.controller;
+package net.thumbtack.onlineshop.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.onlineshop.dto.request.LoginRequest;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class SessionControllerTest {
+public class SessionTest {
     @Autowired
     private MockMvc mockMvc;
 

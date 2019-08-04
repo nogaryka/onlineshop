@@ -1,10 +1,10 @@
 package net.thumbtack.onlineshop.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.onlineshop.dto.request.AddCategoryRequest;
 import net.thumbtack.onlineshop.dto.request.EditCategoryRequest;
 import net.thumbtack.onlineshop.dto.request.RegistrationAdminRequest;
 import net.thumbtack.onlineshop.dto.responce.AddCategoryResponse;
+import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.service.DebugService;
 import org.junit.After;
 import org.junit.Before;
@@ -13,46 +13,36 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
-import javax.servlet.http.Cookie;
-import java.util.ArrayList;
 import java.util.List;
 
 import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class CategoryControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private TestRestTemplate restTemplate;
 
     @Autowired
     private DebugService debugService;
 
-    private Cookie cookie;
+    private String cookie;
 
     @After
     public void clearDB() {
@@ -60,279 +50,121 @@ public class CategoryControllerTest {
     }
 
     @Before
-    public void before() throws Exception {
-        RegistrationAdminRequest request = new RegistrationAdminRequest("Администратор", "Фамилия", "Отчество", "Adminlogin", "password", "admin");
-        MvcResult registrationResult = mockMvc.perform(post("/api/admins")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(cookie().exists(COOKIE))
-                .andReturn();
-        cookie = registrationResult.getResponse().getCookie(COOKIE);
+    public void before() {
+        RegistrationAdminRequest request = new RegistrationAdminRequest("Ivan", "Maksimov",
+                "Petrovich", "vsehGlava1", "123456", "Glava");
+        ResponseEntity<RegistrationAdminResponse> response = restTemplate.postForEntity("/api/admins", request, RegistrationAdminResponse.class);
+        cookie = response.getHeaders().getFirst(HttpHeaders.SET_COOKIE);
+        cookie = cookie.substring(cookie.indexOf('=') + 1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(cookie);
+        assertTrue(response.getBody().getId() != 0);
+        assertEquals(request.getFirstName(), response.getBody().getFirstName());
+        assertEquals(request.getPost(), response.getBody().getPost());
     }
 
     @Test
-    public void addCategory() throws Exception {
-        EditCategoryRequest request = new EditCategoryRequest("Category", 0);
-        MvcResult addCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Category\"}"))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse categoryResponse = objectMapper.readValue(addCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(categoryResponse.getNameParent());
-        assertEquals(0, (long) categoryResponse.getIdParentCategory());
-        assertEquals("Category", categoryResponse.getName());
-    }
+    public void add_root_and_child_category() {
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity<AddCategoryRequest> requestEntity = new HttpEntity<>(new AddCategoryRequest("Root_Category", 0), requestHeaders);
+        ResponseEntity<AddCategoryResponse> rootCategoryResponse = restTemplate.exchange("/api/categories", HttpMethod.POST, requestEntity, AddCategoryResponse.class);
+        assertEquals(HttpStatus.OK, rootCategoryResponse.getStatusCode());
+        assertEquals(0, (long) rootCategoryResponse.getBody().getIdParentCategory());
 
-    @Test
-    public void addCategoryAndSubcategory() throws Exception {
-        AddCategoryRequest rootCategory = new AddCategoryRequest("Category", 0);
-        MvcResult addCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse = objectMapper.readValue(addCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse.getNameParent());
-        assertEquals(0, (long) rootCategoryResponse.getIdParentCategory());
-        AddCategoryRequest childCategory = new AddCategoryRequest("Subcategory", rootCategoryResponse.getId());
-        MvcResult addChildCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(childCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse childCategoryResponse = objectMapper.readValue(addChildCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertEquals(rootCategoryResponse.getName(), childCategoryResponse.getNameParent());
-        assertEquals(rootCategoryResponse.getId(), childCategoryResponse.getIdParentCategory());
-        assertEquals(childCategory.getName(), childCategoryResponse.getName());
+        HttpHeaders requestHeaders2 = new HttpHeaders();
+        requestHeaders2.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity<AddCategoryRequest> requestEntity2 = new HttpEntity<>(new AddCategoryRequest("Child_Category", rootCategoryResponse.getBody().getId()), requestHeaders2);
+        ResponseEntity<AddCategoryResponse> rootCategoryResponse2 = restTemplate.exchange("/api/categories", HttpMethod.POST, requestEntity2, AddCategoryResponse.class);
+        assertEquals(HttpStatus.OK, rootCategoryResponse2.getStatusCode());
+        assertEquals(rootCategoryResponse.getBody().getId(), rootCategoryResponse2.getBody().getIdParentCategory());
+        assertEquals(rootCategoryResponse.getBody().getName(), rootCategoryResponse2.getBody().getNameParent());
     }
 
 
     @Test
-    public void getCategory() throws Exception {
-        AddCategoryRequest rootCategory = new AddCategoryRequest("Category", 0);
-        MvcResult addCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse = objectMapper.readValue(addCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse.getNameParent());
-        assertEquals(0, (long)rootCategoryResponse.getIdParentCategory());
-        MvcResult getCategoryResult = mockMvc.perform(get("/api/categories/{id}", String.valueOf(rootCategoryResponse.getId()))
-                .cookie(cookie))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse getCategoryResponse = objectMapper.readValue(getCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertEquals(rootCategoryResponse.getName(), getCategoryResponse.getName());
-        assertEquals(rootCategoryResponse.getId(), getCategoryResponse.getId());
+    public void add_category_and_put_category_and_get_category() {
+        HttpHeaders addRequestHeaders = new HttpHeaders();
+        addRequestHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity<AddCategoryRequest> addRequestEntity = new HttpEntity<>(new AddCategoryRequest("Root_Category", 0), addRequestHeaders);
+        ResponseEntity<AddCategoryResponse> addRootCategoryResponse = restTemplate.exchange("/api/categories", HttpMethod.POST, addRequestEntity, AddCategoryResponse.class);
+        assertEquals(HttpStatus.OK, addRootCategoryResponse.getStatusCode());
+        assertNull(addRootCategoryResponse.getBody().getNameParent());
+        assertEquals(0, (long) addRootCategoryResponse.getBody().getIdParentCategory());
+
+        HttpHeaders putRequestHeaders = new HttpHeaders();
+        putRequestHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity<EditCategoryRequest> putRequestEntity = new HttpEntity<>(new EditCategoryRequest("RootRootCategory", 0), putRequestHeaders);
+        ResponseEntity<AddCategoryResponse> putCategoryResponse = restTemplate.exchange("/api/categories/{category_number}", HttpMethod.PUT, putRequestEntity, AddCategoryResponse.class, addRootCategoryResponse.getBody().getId());
+        assertEquals(HttpStatus.OK, putCategoryResponse.getStatusCode());
+        assertEquals("RootRootCategory", putCategoryResponse.getBody().getName());
+
+        HttpHeaders getRequestHeaders = new HttpHeaders();
+        getRequestHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity getRequestEntity = new HttpEntity(null, getRequestHeaders);
+        ResponseEntity<AddCategoryResponse> getCategoryResponse = restTemplate.exchange("/api/categories/{category_number}", HttpMethod.GET, getRequestEntity, AddCategoryResponse.class, addRootCategoryResponse.getBody().getId());
+        assertEquals(HttpStatus.OK, getCategoryResponse.getStatusCode());
+        assertEquals(putCategoryResponse.getBody().getName(), getCategoryResponse.getBody().getName());
+        assertEquals(putCategoryResponse.getBody().getId(), getCategoryResponse.getBody().getId());
     }
 
     @Test
-    public void putCategory() throws Exception {
-        AddCategoryRequest rootCategory = new AddCategoryRequest("Root_Category", 0);
-        MvcResult addCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse = objectMapper.readValue(addCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse.getNameParent());
-        assertEquals(0, (long) rootCategoryResponse.getIdParentCategory());
-        EditCategoryRequest putCategory = new EditCategoryRequest("Category_Root", 0);
-        MvcResult getCategoryResult = mockMvc.perform(put("/api/categories/{id}", String.valueOf(rootCategoryResponse.getId()))
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse putCategoryResponse = objectMapper.readValue(getCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertEquals(rootCategoryResponse.getId(), putCategoryResponse.getId());
-        assertNotEquals(rootCategoryResponse.getName(), putCategoryResponse.getName());
+    public void put_root_category_to_child_with_error() {
+        HttpHeaders addRequestHeaders = new HttpHeaders();
+        addRequestHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity<AddCategoryRequest> addRequestEntity = new HttpEntity<>(new AddCategoryRequest("Root_Category", 0), addRequestHeaders);
+        ResponseEntity<AddCategoryResponse> addRootCategoryResponse = restTemplate.exchange("/api/categories", HttpMethod.POST, addRequestEntity, AddCategoryResponse.class);
+        assertEquals(HttpStatus.OK, addRootCategoryResponse.getStatusCode());
+        assertNull(addRootCategoryResponse.getBody().getNameParent());
+        assertEquals(0, (long) addRootCategoryResponse.getBody().getIdParentCategory());
+
+        HttpHeaders addRabbitHeaders = new HttpHeaders();
+        addRabbitHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity<AddCategoryRequest> addRabbitEntity = new HttpEntity<>(new AddCategoryRequest("Rabbit_Category", 0), addRabbitHeaders);
+        ResponseEntity<AddCategoryResponse> addRabbitResponse = restTemplate.exchange("/api/categories", HttpMethod.POST, addRabbitEntity, AddCategoryResponse.class);
+        assertEquals(HttpStatus.OK, addRabbitResponse.getStatusCode());
+        assertNull(addRabbitResponse.getBody().getNameParent());
+        assertEquals(0, (long) addRabbitResponse.getBody().getIdParentCategory());
+
+        HttpHeaders putRequestHeaders = new HttpHeaders();
+        putRequestHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity<EditCategoryRequest> putRequestEntity = new HttpEntity<>(new EditCategoryRequest(null, addRootCategoryResponse.getBody().getId()), putRequestHeaders);
+        ResponseEntity<AddCategoryResponse> putCategoryResponse = restTemplate.exchange("/api/categories/{category_number}", HttpMethod.PUT, putRequestEntity, AddCategoryResponse.class, addRabbitResponse.getBody().getId());
+        assertEquals(HttpStatus.BAD_REQUEST, putCategoryResponse.getStatusCode());
     }
 
     @Test
-    public void putCategoryToSubcategory_withError() throws Exception {
-        AddCategoryRequest rootCategory1 = new AddCategoryRequest("Root_Category-1", 0);
-        MvcResult addCategoryResult1 = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory1)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse1 = objectMapper.readValue(addCategoryResult1.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse1.getNameParent());
-        assertEquals(0, (long)rootCategoryResponse1.getIdParentCategory());
-        AddCategoryRequest rootCategory2 = new AddCategoryRequest("Root_Category-2", 0);
-        MvcResult addCategoryResult2 = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory2)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse2 = objectMapper.readValue(addCategoryResult2.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse2.getNameParent());
-        assertEquals(0, (long) rootCategoryResponse2.getIdParentCategory());
-        EditCategoryRequest putCategory = new EditCategoryRequest(rootCategoryResponse1.getName(), rootCategoryResponse2.getId());
-        mockMvc.perform(put("/api/categories/{id}", String.valueOf(rootCategoryResponse1.getId()))
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putCategory)))
-                .andExpect(status().isBadRequest());
+    public void add_category_and_delete_category_and_get_category_with_error() {
+        HttpHeaders addRequestHeaders = new HttpHeaders();
+        addRequestHeaders.add("Cookie", COOKIE+ "=" + cookie);
+        HttpEntity<AddCategoryRequest> addRequestEntity = new HttpEntity<>(new AddCategoryRequest("Root_Category", 0), addRequestHeaders);
+        ResponseEntity<AddCategoryResponse> addRootCategoryResponse = restTemplate.exchange("/api/categories", HttpMethod.POST, addRequestEntity, AddCategoryResponse.class);
+        assertEquals(HttpStatus.OK, addRootCategoryResponse.getStatusCode());
+        assertNull(addRootCategoryResponse.getBody().getNameParent());
+        assertEquals(0, (long) addRootCategoryResponse.getBody().getIdParentCategory());
+
+        HttpHeaders deleteRequestHeaders = new HttpHeaders();
+        deleteRequestHeaders.add("Cookie", COOKIE+ "=" + cookie);
+        HttpEntity deleteRequestEntity = new HttpEntity(null, deleteRequestHeaders);
+        ResponseEntity<String> deleteCategoryResponse = restTemplate.exchange("/api/categories/{category_number}", HttpMethod.DELETE, deleteRequestEntity, String.class, addRootCategoryResponse.getBody().getId());
+        assertEquals(HttpStatus.OK, deleteCategoryResponse.getStatusCode());
     }
 
     @Test
-    public void putSubcategory() throws Exception {
-        AddCategoryRequest rootCategory1 = new AddCategoryRequest("Root_Category-1", 0);
-        MvcResult addCategoryResult1 = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory1)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse1 = objectMapper.readValue(addCategoryResult1.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse1.getNameParent());
-        assertEquals(0, (long)rootCategoryResponse1.getIdParentCategory());
-        AddCategoryRequest rootCategory2 = new AddCategoryRequest("Root_Category-2", 0);
-        MvcResult addCategoryResult2 = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory2)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse2 = objectMapper.readValue(addCategoryResult2.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse2.getNameParent());
-        assertEquals(0, (long) rootCategoryResponse2.getIdParentCategory());
-        AddCategoryRequest childCategory = new AddCategoryRequest("Child_Category", rootCategoryResponse1.getId());
-        MvcResult addChildCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(childCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse childCategoryResponse = objectMapper.readValue(addChildCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertEquals(rootCategoryResponse1.getName(), childCategoryResponse.getNameParent());
-        assertEquals(rootCategoryResponse1.getId(), childCategoryResponse.getIdParentCategory());
-        EditCategoryRequest putCategory = new EditCategoryRequest(null, rootCategoryResponse2.getId());
-        MvcResult getCategoryResult = mockMvc.perform(put("/api/categories/{category_number}", String.valueOf(childCategoryResponse.getId()))
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse putCategoryResponse = objectMapper.readValue(getCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertEquals(rootCategoryResponse2.getId(), putCategoryResponse.getIdParentCategory());
-        assertEquals(rootCategoryResponse2.getName(), putCategoryResponse.getNameParent());
-    }
-
-    @Test
-    public void putSubcategoryToCategory_withError() throws Exception {
-        AddCategoryRequest rootCategory = new AddCategoryRequest("Root_Category", 0);
-        MvcResult addCategoryResult1 = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse = objectMapper.readValue(addCategoryResult1.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse.getNameParent());
-        assertEquals(0, (long) rootCategoryResponse.getIdParentCategory());
-        AddCategoryRequest childCategory = new AddCategoryRequest("Child_Category", rootCategoryResponse.getId());
-        MvcResult addChildCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(childCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse childCategoryResponse = objectMapper.readValue(addChildCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertEquals(rootCategoryResponse.getName(), childCategoryResponse.getNameParent());
-        assertEquals(rootCategoryResponse.getId(), childCategoryResponse.getIdParentCategory());
-        EditCategoryRequest putCategory = new EditCategoryRequest("Child_Category", 0);
-        mockMvc.perform(put("/api/categories/{category_number}", String.valueOf(childCategoryResponse.getId()))
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putCategory)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void putCategoryWithEmptyRequest_withError() throws Exception {
-        AddCategoryRequest rootCategory = new AddCategoryRequest("Root_Category", 0);
-        MvcResult addCategoryResult1 = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse = objectMapper.readValue(addCategoryResult1.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse.getNameParent());
-        assertEquals(0, (long) rootCategoryResponse.getIdParentCategory());
-        AddCategoryRequest childCategory = new AddCategoryRequest("Child_Category", rootCategoryResponse.getId());
-        MvcResult addChildCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(childCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse childCategoryResponse = objectMapper.readValue(addChildCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertEquals(rootCategoryResponse.getName(), childCategoryResponse.getNameParent());
-        assertEquals(rootCategoryResponse.getId(), childCategoryResponse.getIdParentCategory());
-        EditCategoryRequest putCategory = new EditCategoryRequest(null, 0);
-        MvcResult getCategoryResult = mockMvc.perform(put("/api/categories/{id}", String.valueOf(childCategoryResponse.getId()))
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putCategory)))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-    }
-
-    @Test
-    public void deleteCategory() throws Exception {
-        AddCategoryRequest rootCategory = new AddCategoryRequest("Root_Category", 0);
-        MvcResult addCategoryResult = mockMvc.perform(post("/api/categories")
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(rootCategory)))
-                .andExpect(status().isOk())
-                .andReturn();
-        AddCategoryResponse rootCategoryResponse = objectMapper.readValue(addCategoryResult.getResponse().getContentAsString(), AddCategoryResponse.class);
-        assertNull(rootCategoryResponse.getNameParent());
-        assertEquals(0, (long) rootCategoryResponse.getIdParentCategory());
-        MvcResult result = mockMvc.perform(delete("/api/categories/{id}", String.valueOf(rootCategoryResponse.getId()))
-                .cookie(cookie))
-                .andExpect(status().isOk())
-                .andReturn();
-        assertEquals("", result.getResponse().getContentAsString());
-    }
-
-    @Test
-    public void getAllCategories() throws Exception {
-        List<AddCategoryRequest> requestList = new ArrayList<>();
+    public void getAllCategories() {
         for (int i = 0; i < 5; i++) {
-            requestList.add(new AddCategoryRequest("Root_Category_" + i, 0));
+            HttpHeaders addRequestHeaders = new HttpHeaders();
+            addRequestHeaders.add("Cookie", COOKIE + "=" + cookie);
+            HttpEntity<AddCategoryRequest> addRequestEntity = new HttpEntity<>(new AddCategoryRequest("Root_Category_" + i, 0), addRequestHeaders);
+            ResponseEntity<AddCategoryResponse> addRootCategoryResponse = restTemplate.exchange("/api/categories", HttpMethod.POST, addRequestEntity, AddCategoryResponse.class);
+            assertEquals(HttpStatus.OK, addRootCategoryResponse.getStatusCode());
         }
-        for (AddCategoryRequest request : requestList) {
-            MvcResult addCategoryResult = mockMvc.perform(post("/api/categories")
-                    .cookie(cookie)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isOk())
-                    .andReturn();
-        }
-        MvcResult getResult = mockMvc.perform(get("/api/categories")
-                .cookie(cookie))
-                .andExpect(status().isOk())
-                .andReturn();
-        List<AddCategoryResponse> categoryResponseList = objectMapper.readValue(getResult.getResponse().getContentAsString(), objectMapper.getTypeFactory().constructCollectionType(List.class, AddCategoryResponse.class));
-        assertFalse(categoryResponseList.isEmpty());
+        HttpHeaders getRequestHeaders = new HttpHeaders();
+        getRequestHeaders.add("Cookie", COOKIE + "=" + cookie);
+        HttpEntity getRequestEntity = new HttpEntity(null, getRequestHeaders);
+        ResponseEntity<List<AddCategoryResponse>> getCategoryResponse = restTemplate.exchange("/api/categories", HttpMethod.GET, getRequestEntity, new ParameterizedTypeReference<List<AddCategoryResponse>>() {
+        });
+        assertEquals(HttpStatus.OK, getCategoryResponse.getStatusCode());
+        assertEquals(5, getCategoryResponse.getBody().size());
     }
 }
-
-

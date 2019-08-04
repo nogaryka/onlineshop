@@ -1,4 +1,4 @@
-package net.thumbtack.onlineshop.controller;
+package net.thumbtack.onlineshop.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.thumbtack.onlineshop.dto.request.EditAccountAdminRequest;
@@ -6,7 +6,6 @@ import net.thumbtack.onlineshop.dto.request.RegistrationAdminRequest;
 import net.thumbtack.onlineshop.dto.responce.RegistrationAdminResponse;
 import net.thumbtack.onlineshop.service.DebugService;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
@@ -33,7 +32,7 @@ import javax.servlet.http.Cookie;
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class AdministratorControllerTest {
+public class AdministratorTest {
     @Autowired
     private MockMvc mockMvc;
 

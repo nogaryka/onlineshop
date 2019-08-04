@@ -1,6 +1,6 @@
 package net.thumbtack.onlineshop.validator;
 
-import net.thumbtack.onlineshop.exceptions.OnlineShopValidatorException;
+import net.thumbtack.onlineshop.exceptions.OnlineShopExceptionOld;
 import net.thumbtack.onlineshop.validator.annotation.MaxNameLength;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -20,7 +20,7 @@ public class MaxNameLengthValidate implements ConstraintValidator<MaxNameLength,
             return true;
         }
         if (maxNameLength < validField.length()) {
-            throw new OnlineShopValidatorException(constraintValidatorContext.getDefaultConstraintMessageTemplate());
+            throw new OnlineShopExceptionOld(constraintValidatorContext.getDefaultConstraintMessageTemplate());
         }
         return true;
     }

@@ -40,13 +40,14 @@ public class PurchaseController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    private ResponseEntity<?> summaryList(@CookieValue(COOKIE) String cookie,
-                                          @RequestParam(name = "category", required = false) List<Integer> idCategories,
-                                          @RequestParam(name = "product", required = false) List<Integer> idProducts,
-                                          @RequestParam(name = "client", required = false) List<Integer> idClients,
-                                          @RequestParam(name = "offset", required = false) Integer offset,
-                                          @RequestParam(name = "limit", required = false) Integer limit) {
-        return purchaseService.getSummaryList("", idCategories, idProducts, idClients, offset, limit);
+    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity<?> getSummaryList(@CookieValue(COOKIE) String cookie,
+                                             @RequestParam(name = "category", required = false) List<Integer> idCategories,
+                                             @RequestParam(name = "product", required = false) List<Integer> idProducts,
+                                             @RequestParam(name = "client", required = false) List<Integer> idClients,
+                                             @RequestParam(name = "offset", required = false) Integer offset,
+                                             @RequestParam(name = "limit", required = false) Integer limit,
+                                             @RequestParam(name = "mod", defaultValue = "Purchase") String mod) {
+        return purchaseService.getSummaryList(cookie, idCategories, idProducts, idClients, offset, limit, mod);
     }
 }

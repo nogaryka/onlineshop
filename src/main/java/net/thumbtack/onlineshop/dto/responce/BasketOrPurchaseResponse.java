@@ -10,16 +10,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseResponse {
+public class BasketOrPurchaseResponse {
     private InformarionAdoutClientsForAdminResponse client;
 
     private List<ProductResponse> products;
 
-    private Integer allCost;
+    private Integer totalExpenseForClient;
 
-    public PurchaseResponse(InformarionAdoutClientsForAdminResponse client) {
+    public BasketOrPurchaseResponse(InformarionAdoutClientsForAdminResponse client) {
         this.client = client;
         this.products = new ArrayList<>();
-        this.allCost = 0;
+        this.totalExpenseForClient = 0;
     }
 }

@@ -14,6 +14,10 @@ import net.thumbtack.onlineshop.service.AccaountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
+import static net.thumbtack.onlineshop.exceptions.ErrorCod.UNAUTHORIZED_ATTEMPT_TO_ACCESS;
+
 @Service
 public class AccaountServiceImpl implements AccaountService {
     private final SessionRepository sessionRepository;
@@ -30,7 +34,17 @@ public class AccaountServiceImpl implements AccaountService {
 
     @Override
     public RegistrationUserResponse getInfoAboutMe(String cookie) throws OnlineShopExceptionOld {
-        Session session = sessionRepository.findByToken(cookie).get();
+        Session session;
+        if(!"".equals(cookie)) {
+            Optional<Session> sessionOpt = sessionRepository.findByToken(cookie);
+            if(sessionOpt.isPresent()) {
+                session = sessionOpt.get();
+            } else {
+                throw new OnlineShopExceptionOld(UNAUTHORIZED_ATTEMPT_TO_ACCESS);
+            }
+        } else {
+            throw new OnlineShopExceptionOld(UNAUTHORIZED_ATTEMPT_TO_ACCESS);
+        }
         SessionServiceImpl sessionService = new SessionServiceImpl(administratorRepository, clientRepository,
                 sessionRepository);
         if (sessionService.isAdmin(session.getLogin())) {
@@ -42,7 +56,8 @@ public class AccaountServiceImpl implements AccaountService {
             Client client = clientRepository.findByLogin(session.getLogin()).get();
             return new RegistrationClientResponse(client.getId(), client.getFirstName(),
                     client.getLastName(), client.getPatronymic(), client.getLogin(), client.getPassword(),
-                    session.getToken(), client.getEmail(), client.getPhoneNumber(), client.getPostalAddress(), client.getCash());
+                    session.getToken(), client.getEmail(), client.getPhoneNumber(), client.getPostalAddress(),
+                    client.getCash());
         }
         return null;
     }

@@ -53,9 +53,4 @@ public class AdministratorController {
         RegistrationAdminResponse registerResponse = adminService.editProfileAdmin(cookie, request);
         return ResponseEntity.ok().body(registerResponse);
     }
-
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> statement(@RequestBody String name, HttpServletRequest response) {
-        return ResponseEntity.ok("");
-    }
 }

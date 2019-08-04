@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static net.thumbtack.onlineshop.config.ConstConfig.COOKIE;
+import static net.thumbtack.onlineshop.exceptions.ErrorCod.UNAUTHORIZED_ATTEMPT_TO_ACCESS;
 
 @Service
 @Transactional
@@ -83,5 +84,20 @@ public class SessionServiceImpl implements SessionService {
 
     public String getLogin(String token) {
         return sessionRepository.findByToken(token).get().getLogin();
+    }
+
+    public Session validCookie(String cookie) {
+        Session session;
+        if(!"".equals(cookie)) {
+            Optional<Session> sessionOpt = sessionRepository.findByToken(cookie);
+            if(sessionOpt.isPresent()) {
+                session = sessionOpt.get();
+            } else {
+                throw new OnlineShopExceptionOld(UNAUTHORIZED_ATTEMPT_TO_ACCESS);
+            }
+        } else {
+            throw new OnlineShopExceptionOld(UNAUTHORIZED_ATTEMPT_TO_ACCESS);
+        }
+        return session;
     }
 }

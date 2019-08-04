@@ -21,7 +21,7 @@ public class ProductResponse {
 
     private List<Category> categories;
 
-    private Integer allCost;
+    private Integer  totalPricePerItem;
 
     public ProductResponse(Integer id, String name, Integer price, Integer count, List<Category> categories) {
         this.id = id;
@@ -29,6 +29,6 @@ public class ProductResponse {
         this.price = price;
         this.count = count;
         this.categories = categories;
-        this.allCost = price * count;
+        this.totalPricePerItem = price * count;
     }
 }
