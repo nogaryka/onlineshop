@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface PurchaseRepository extends CrudRepository<Purchase, Integer> {
     @Query(value = "SELECT COUNT(*) > 0 FROM purchases " +
             "WHERE id_product_id = :idProduct AND id_client_id = :idClient", nativeQuery = true)
-    Integer existsByClientAndProduct(@Param("idClient") Integer idClient, @Param("idProduct") Integer idProduct);
+    boolean existsByClientAndProduct(@Param("idClient") Integer idClient, @Param("idProduct") Integer idProduct);
 
     @Query(value = "SELECT p.* FROM purchases p" +
             " WHERE p.id_product_id = :idProduct AND p.id_client_id = :idClient", nativeQuery = true)

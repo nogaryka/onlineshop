@@ -6,7 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {//CrudRepository<Product, Integer>  {
+public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {
     Iterable<Product> findDistinctProductsByCategoriesInOrderByNameAsc(Iterable<Category> idCategories);
 
     Iterable<Product> findAllByCategoriesIsNullOrderByNameAsc();

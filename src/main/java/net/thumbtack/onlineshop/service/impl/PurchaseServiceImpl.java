@@ -82,7 +82,7 @@ public class PurchaseServiceImpl implements PurchaseService {
             Purchase purchase;
             Purchase.IdClientAndProduct idClientAndProduct = new Purchase.IdClientAndProduct(client, product);
             purchase = new Purchase(idClientAndProduct, request.getCount(), request.getPrice() * request.getCount());
-            if (purchaseRepository.existsByClientAndProduct(client.getId(), product.getId()) == 1) {
+            if (purchaseRepository.existsByClientAndProduct(client.getId(), product.getId())) {
                 Purchase newPurchase = purchaseRepository.findByClientAndProduct(client.getId(), product.getId()).get();
                 newPurchase.setAmount(purchase.getAmount() + newPurchase.getAmount());
                 newPurchase.setTotalPricePerItem(purchase.getTotalPricePerItem() + newPurchase.getTotalPricePerItem());
@@ -346,6 +346,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         for (Basket basket : baskets) {
             client = basket.getIdClientAndProduct().getIdClient();
             product = basket.getIdClientAndProduct().getIdProduct();
+            //product.setCount(product.getCount() - basket.getAmount());
             if(basket.getAmount() > product.getCount()) {
                 productResponseList.add(new ProductResponse(product.getId(), product.getName(), product.getPrice(),
                         basket.getAmount() - product.getCount(), product.getCategories()));
